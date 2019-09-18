@@ -1,0 +1,4 @@
+package android.libs.mobilertc
+
+configurations.create("default")
+artifacts.add("default", file('mobilertc.aar'))
