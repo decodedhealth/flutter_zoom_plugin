@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_zoom_plugin/zoom_view.dart';
 import 'package:flutter_zoom_plugin/zoom_options.dart';
 
@@ -7,14 +8,17 @@ import 'package:flutter/material.dart';
 
 class MeetingWidget extends StatelessWidget {
 
+  //TODO Implement event stream.
+  //static const stream = const EventChannel("com.decodedhealth/zoom_event_stream");
+
   ZoomOptions zoomOptions;
   ZoomMeetingOptions meetingOptions;
 
   MeetingWidget({Key key, meetingId, meetingPassword}) : super(key: key) {
     this.zoomOptions = new ZoomOptions(
       domain: "zoom.us",
-      appKey: "app-key",
-      appSecret: "app-secret",
+      appKey: "appKey",
+      appSecret: "appSecret",
     );
     this.meetingOptions = new ZoomMeetingOptions(
         userId: 'example',
@@ -47,7 +51,14 @@ class MeetingWidget extends StatelessWidget {
             print(results);
 
             if(results[0] == 0) {
-              controller.joinMeeting(this.meetingOptions);
+              controller.joinMeeting(this.meetingOptions)
+                .then((joinMeetingResult) {
+
+                  controller.meetingStatus(this.meetingOptions.meetingId)
+                    .then((status) {
+                    print("Meeting Status: " + status[0] + " - " + status[1]);
+                  });
+                });
             }
 
           }).catchError((error) {

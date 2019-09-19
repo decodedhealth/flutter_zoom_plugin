@@ -83,4 +83,14 @@ class ZoomViewController {
 
     return _channel.invokeMethod('join', optionMap);
   }
+
+
+  Future<List> meetingStatus(String meetingId) async {
+    assert(meetingId != null);
+
+    var optionMap = new Map<String, String>();
+    optionMap.putIfAbsent("meetingId", () => meetingId);
+
+    return _channel.invokeMethod('meeting_status', optionMap);
+  }
 }

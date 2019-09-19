@@ -35,6 +35,6 @@
                 android:configChanges="orientation|screenSize"
                 android:hardwareAccelerated="false"
                 android:theme="@style/ZMTheme.SubWindow"
-                android:screenOrientation="landscape" />
+                android:screenOrientation="portrait" />
     </application>
 </manifest>
