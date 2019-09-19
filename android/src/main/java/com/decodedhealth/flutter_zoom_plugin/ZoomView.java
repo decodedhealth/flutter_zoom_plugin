@@ -107,10 +107,10 @@ public class ZoomView  implements PlatformView,
 
         // Step 4: Configure meeting options.
         JoinMeetingOptions opts = new JoinMeetingOptions();
-        opts.no_invite = options.get("disableInvite");
-        opts.no_share = options.get("disableShare");
-        opts.no_driving_mode = options.get("disableDrive");
-        opts.no_dial_in_via_phone = options.get("disableDialIn");
+        opts.no_invite = parseBoolean(options, "disableInvite", false);
+        opts.no_share = parseBoolean(options, "disableShare", false);
+        opts.no_driving_mode = parseBoolean(options, "disableDrive", false);
+        opts.no_dial_in_via_phone = parseBoolean(options, "disableDialIn", false);
 
         // Step 5: Setup join meeting parameters
         JoinMeetingParams params = new JoinMeetingParams();
@@ -123,6 +123,10 @@ public class ZoomView  implements PlatformView,
         meetingService.joinMeetingWithParams(context, params, opts);
 
         result.success(true);
+    }
+
+    private boolean parseBoolean(Map<String, String> options, String property, boolean defaultValue) {
+        return options.get(property) == null ? defaultValue : Boolean.parseBoolean(options.get(property));
     }
 
     @Override
