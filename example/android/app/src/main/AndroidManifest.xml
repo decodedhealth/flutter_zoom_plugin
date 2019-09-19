@@ -29,5 +29,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+                android:name=".FlutterMeetingActivity"
+                android:configChanges="orientation|screenSize"
+                android:hardwareAccelerated="false"
+                android:theme="@style/ZMTheme.SubWindow"
+                android:screenOrientation="landscape" />
     </application>
 </manifest>
