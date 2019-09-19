@@ -76,6 +76,10 @@ class ZoomViewController {
     optionMap.putIfAbsent("userId", () => options.userId);
     optionMap.putIfAbsent("meetingId", () => options.meetingId);
     optionMap.putIfAbsent("meetingPassword", () => options.meetingPassword);
+    optionMap.putIfAbsent("disableDialIn", () => options.disableDialIn);
+    optionMap.putIfAbsent("disableDrive", () => options.disableDrive);
+    optionMap.putIfAbsent("disableInvite", () => options.disableInvite);
+    optionMap.putIfAbsent("disableShare", () => options.disableShare);
 
     return _channel.invokeMethod('join', optionMap);
   }
