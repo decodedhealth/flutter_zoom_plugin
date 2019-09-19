@@ -20,6 +20,10 @@ class MeetingWidget extends StatelessWidget {
         userId: 'example',
         meetingId: meetingId,
         meetingPassword: meetingPassword,
+        disableDialIn: true,
+        disableDrive: true,
+        disableInvite: true,
+        disableShare: true
     );
   }
 

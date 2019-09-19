@@ -107,6 +107,10 @@ public class ZoomView  implements PlatformView,
 
         // Step 4: Configure meeting options.
         JoinMeetingOptions opts = new JoinMeetingOptions();
+        opts.no_invite = options.get("disableInvite");
+        opts.no_share = options.get("disableShare");
+        opts.no_driving_mode = options.get("disableDrive");
+        opts.no_dial_in_via_phone = options.get("disableDialIn");
 
         // Step 5: Setup join meeting parameters
         JoinMeetingParams params = new JoinMeetingParams();
