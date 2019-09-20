@@ -202,6 +202,8 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
             self.initZoom(call: call, result: result)
         case "join":
             self.joinMeeting(call: call, result: result)
+        case "meeting_status":
+            self.meetingStatus(call: call, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -221,7 +223,39 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
     auth?.sdkAuth()
   }
 
-  
+    public func meetingStatus(call: FlutterMethodCall, result: FlutterResult) {
+
+          let meetingService = MobileRTC.shared().getMeetingService()
+          if meetingService != nil {
+
+              //let arguments = call.arguments as! Dictionary<String, String>
+              let meetingState = meetingService?.getMeetingState()
+              var message = "MEETING_STATUS_UNKNOWN"
+              switch meetingState {
+              case MobileRTCMeetingState_Idle:
+                  message = "MEETING_STATUS_IDLE"
+                  break
+              case MobileRTCMeetingState_Connecting:
+                  message = "MEETING_STATUS_CONNECTING"
+                  break
+              case MobileRTCMeetingState_InMeeting:
+                  message = "MEETING_STATUS_INMEETING"
+                  break
+              case MobileRTCMeetingState_WebinarPromote:
+                  message = "MEETING_STATUS_WEBINAR_PROMOTE"
+                  break
+              case MobileRTCMeetingState_WebinarDePromote:
+                  message = "MEETING_STATUS_WEBINAR_DEPROMOTE"
+                  break
+              default:
+                  message = "MEETING_STATUS_UNKNOWN"
+              }
+
+              result([message, ""])
+          } else {
+              result(["MEETING_STATUS_UNKNOWN", ""])
+          }
+      }
 
   public func joinMeeting(call: FlutterMethodCall, result: FlutterResult) {
 
