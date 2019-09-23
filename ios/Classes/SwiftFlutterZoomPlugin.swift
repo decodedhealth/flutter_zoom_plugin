@@ -260,12 +260,17 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
   public func joinMeeting(call: FlutterMethodCall, result: FlutterResult) {
 
     let meetingService = MobileRTC.shared().getMeetingService()
+    let meetingSettings = MobileRTC.shared().getMeetingSettings()
+    
     if meetingService != nil {
         
       let arguments = call.arguments as! Dictionary<String, String>
 
       meetingService?.delegate = self
 
+      meetingSettings.disableDriveMode(NSString(string: arguments["disableDrive"]).boolValue)
+      meetingSettings.disableCall(NSString(string: arguments["disableDialIn"]).boolValue)
+      
       var params = [
         kMeetingParam_Username: arguments["userId"]!,
         kMeetingParam_MeetingNumber: arguments["meetingId"]!
