@@ -268,8 +268,8 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
 
       meetingService?.delegate = self
 
-      meetingSettings.disableDriveMode(NSString(string: arguments["disableDrive"]).boolValue)
-      meetingSettings.disableCall(NSString(string: arguments["disableDialIn"]).boolValue)
+      meetingSettings?.disableDriveMode(NSString(string: arguments["disableDrive"]!).boolValue)
+      meetingSettings?.disableCall(in: NSString(string: arguments["disableDialIn"]!).boolValue)
       
       var params = [
         kMeetingParam_Username: arguments["userId"]!,
