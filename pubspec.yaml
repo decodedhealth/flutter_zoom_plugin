@@ -1,6 +1,6 @@
 name: flutter_zoom_plugin
-description: A new Flutter plugin.
-version: 0.0.1
+description: A flutter plugin for the Zoom SDK.
+version: 0.0.2
 author: Kevin Bayes
 homepage: https://decodedhealth.com
 
