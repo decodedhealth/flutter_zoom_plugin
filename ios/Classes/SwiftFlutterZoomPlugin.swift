@@ -298,7 +298,7 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
 
 
 
-  public func onMeetingError(_ error: MobileRTCMeetError, message: String) {
+  public func onMeetingError(_ error: MobileRTCMeetError, message: String?) {
 
   }
 
