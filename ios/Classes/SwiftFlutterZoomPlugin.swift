@@ -228,7 +228,6 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
           let meetingService = MobileRTC.shared().getMeetingService()
           if meetingService != nil {
 
-              //let arguments = call.arguments as! Dictionary<String, String>
               let meetingState = meetingService?.getMeetingState()
               var message = "MEETING_STATUS_UNKNOWN"
               switch meetingState {
