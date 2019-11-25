@@ -6,7 +6,7 @@ A flutter plugin for the Zoom SDK.
 
 This plugin is still in development.
 
-Please use ```master``` for Apple app store builds deployments. To test on an iOS simulator please use branch ```master_dev```
+Please use ```master``` for Apple app store build deployments. To test on an iOS simulator please use branch ```master_dev```
 
 ## Zoom Versions
 
