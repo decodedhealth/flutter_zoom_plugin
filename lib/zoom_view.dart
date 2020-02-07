@@ -54,9 +54,14 @@ class _ZoomViewState extends State<ZoomView> {
 
 class ZoomViewController {
 
-  ZoomViewController._(int id) : _channel = new MethodChannel('flutter_zoom_plugin');
+  ZoomViewController._(int id) :
+        _channel = new MethodChannel('flutter_zoom_plugin'),
+        _zoomStatusEventChannel = new EventChannel(statusStream);
+
+  static const String statusStream = "com.decodedhealth/zoom_event_stream";
 
   final MethodChannel _channel;
+  final EventChannel _zoomStatusEventChannel;
 
   Future<List> initZoom(ZoomOptions options) async {
     assert(options != null);
@@ -93,4 +98,9 @@ class ZoomViewController {
 
     return _channel.invokeMethod('meeting_status', optionMap);
   }
+
+  Stream<dynamic> get zoomStatusEvents {
+    return _zoomStatusEventChannel.receiveBroadcastStream();
+  }
+
 }
