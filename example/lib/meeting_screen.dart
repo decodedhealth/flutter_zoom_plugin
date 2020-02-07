@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 
 class MeetingWidget extends StatelessWidget {
 
-  //TODO Implement event stream.
-  //static const stream = const EventChannel("com.decodedhealth/zoom_event_stream");
-
   ZoomOptions zoomOptions;
   ZoomMeetingOptions meetingOptions;
 
@@ -28,6 +25,17 @@ class MeetingWidget extends StatelessWidget {
     );
   }
 
+  void _showToast(BuildContext context, String message) {
+    final scaffold = Scaffold.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+            label: 'Hide', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Use the Todo to create the UI.
@@ -44,18 +52,25 @@ class MeetingWidget extends StatelessWidget {
           controller.initZoom(this.zoomOptions)
               .then((results) {
 
+            controller.zoomStatusEvents.listen((status) {
+              print("Status in: " + status[0] + " - " + status[1]);
+              if (status[0] == "MEETING_STATUS_DISCONNECTING") {
+                Navigator.of(context).pop();
+              }
+            });
+
             print("initialised");
             print(results);
 
             if(results[0] == 0) {
               controller.joinMeeting(this.meetingOptions)
-                .then((joinMeetingResult) {
+                  .then((joinMeetingResult) {
 
-                  controller.meetingStatus(this.meetingOptions.meetingId)
+                controller.meetingStatus(this.meetingOptions.meetingId)
                     .then((status) {
-                    print("Meeting Status: " + status[0] + " - " + status[1]);
-                  });
+                  print("Meeting Status: " + status[0] + " - " + status[1]);
                 });
+              });
             }
 
           }).catchError((error) {
@@ -63,7 +78,7 @@ class MeetingWidget extends StatelessWidget {
             print("Error");
             print(error);
           });
-        }),
+        })
       ),
     );
   }
