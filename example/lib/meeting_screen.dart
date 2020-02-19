@@ -11,8 +11,8 @@ class MeetingWidget extends StatelessWidget {
   MeetingWidget({Key key, meetingId, meetingPassword}) : super(key: key) {
     this.zoomOptions = new ZoomOptions(
       domain: "zoom.us",
-      appKey: "appKey",
-      appSecret: "appSecret",
+      appKey: "KeTsoefS3ue2BGqwaQwYRjP7mYpqWfSUXqYt",
+      appSecret: "vvHfLvHKXtSePfX6b8MVhitVCXmzzWGAxGoj",
     );
     this.meetingOptions = new ZoomMeetingOptions(
         userId: 'example',
@@ -54,7 +54,7 @@ class MeetingWidget extends StatelessWidget {
 
             controller.zoomStatusEvents.listen((status) {
               print("Status in: " + status[0] + " - " + status[1]);
-              if (status[0] == "MEETING_STATUS_DISCONNECTING") {
+              if (status[0] == "MEETING_STATUS_IDLE") {
                 Navigator.of(context).pop();
               }
             });
@@ -65,6 +65,13 @@ class MeetingWidget extends StatelessWidget {
             if(results[0] == 0) {
               controller.joinMeeting(this.meetingOptions)
                   .then((joinMeetingResult) {
+
+//                controller.zoomStatusEvents.listen((status) {
+//                  print("Status in: " + status[0] + " - " + status[1]);
+//                  if (status[0] == "MEETING_STATUS_IDLE") {
+//                    Navigator.of(context).pop();
+//                  }
+//                });
 
                 controller.meetingStatus(this.meetingOptions.meetingId)
                     .then((status) {

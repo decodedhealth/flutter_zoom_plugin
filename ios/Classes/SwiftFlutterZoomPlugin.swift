@@ -3,28 +3,28 @@ import UIKit
 import MobileRTC
 
 public class SwiftFlutterZoomPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) {
-
-    let factory = ZoomViewFactory(messenger: registrar.messenger())
-    registrar.register(factory, withId: "flutter_zoom_plugin")
-  }
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        
+        let factory = ZoomViewFactory(messenger: registrar.messenger())
+        registrar.register(factory, withId: "flutter_zoom_plugin")
+    }
 }
 
 
 public class ZoomViewFactory: NSObject, FlutterPlatformViewFactory {
     
-  private weak var messenger: (NSObjectProtocol & FlutterBinaryMessenger)?
-  
-  init(messenger: (NSObjectProtocol & FlutterBinaryMessenger)?) {
-    self.messenger = messenger
-    super.init()
-  }
-
-  public func create(
-    withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?
-  ) -> FlutterPlatformView {
-    return ZoomView(frame, viewId: viewId, messenger: messenger, args: args)
-  }
+    private weak var messenger: (NSObjectProtocol & FlutterBinaryMessenger)?
+    
+    init(messenger: (NSObjectProtocol & FlutterBinaryMessenger)?) {
+        self.messenger = messenger
+        super.init()
+    }
+    
+    public func create(
+        withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?
+    ) -> FlutterPlatformView {
+        return ZoomView(frame, viewId: viewId, messenger: messenger, args: args)
+    }
 }
 
 public class AuthenticationDelegate: NSObject, MobileRTCAuthDelegate {
@@ -171,29 +171,33 @@ public class AuthenticationDelegate: NSObject, MobileRTCAuthDelegate {
     }
 }
 
-public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDelegate {
-  let frame: CGRect
-  let viewId: Int64
-  var channel: FlutterMethodChannel
-  var authenticationDelegate: AuthenticationDelegate
-
-  init(_ frame: CGRect, viewId: Int64, messenger: (NSObjectProtocol & FlutterBinaryMessenger)?, args: Any?) {
-    self.frame = frame
-    self.viewId = viewId
-    self.channel = FlutterMethodChannel(name: "flutter_zoom_plugin", binaryMessenger: messenger!)
-    self.authenticationDelegate = AuthenticationDelegate()
+public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDelegate, FlutterStreamHandler {
+    let frame: CGRect
+    let viewId: Int64
+    var channel: FlutterMethodChannel
+    var statusEventChannel: FlutterEventChannel
+    var authenticationDelegate: AuthenticationDelegate
+    var eventSink: FlutterEventSink?
     
-    super.init()
+    init(_ frame: CGRect, viewId: Int64, messenger: (NSObjectProtocol & FlutterBinaryMessenger)?, args: Any?) {
+        self.frame = frame
+        self.viewId = viewId
+        self.channel = FlutterMethodChannel(name: "flutter_zoom_plugin", binaryMessenger: messenger!)
+        self.authenticationDelegate = AuthenticationDelegate()
+        self.statusEventChannel = FlutterEventChannel(name: "com.decodedhealth/zoom_event_stream", binaryMessenger: messenger!)
+        
+        super.init()
+        
+        self.channel.setMethodCallHandler(self.onMethodCall)
+        statusEventChannel.setStreamHandler(self)
+    }
     
-    self.channel.setMethodCallHandler(self.onMethodCall)
-  }
-
-  public func view() -> UIView {
-
-    let label = UILabel(frame: frame)
-    label.text = "Zoom"
-    return label
-  }
+    public func view() -> UIView {
+        
+        let label = UILabel(frame: frame)
+        label.text = "Zoom"
+        return label
+    }
     
     public func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
         
@@ -208,101 +212,83 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
             result(FlutterMethodNotImplemented)
         }
     }
-
-  public func initZoom(call: FlutterMethodCall, result: @escaping FlutterResult)  {
-
-    let pluginBundle = Bundle(for: type(of: self))
-    let pluginBundlePath = pluginBundle.bundlePath
-    let arguments = call.arguments as! Dictionary<String, String>
-
-    MobileRTC.initialize(withDomain: arguments["domain"]!, enableLog: true, bundleResPath: pluginBundlePath)
-    let auth = MobileRTC.shared().getAuthService()
-    auth?.delegate = self.authenticationDelegate.onAuth(result)
-    auth?.clientKey = arguments["appKey"]!
-    auth?.clientSecret = arguments["appSecret"]!
-    auth?.sdkAuth()
-  }
-
-    public func meetingStatus(call: FlutterMethodCall, result: FlutterResult) {
-
-          let meetingService = MobileRTC.shared().getMeetingService()
-          if meetingService != nil {
-
-              let meetingState = meetingService?.getMeetingState()
-              var message = "MEETING_STATUS_UNKNOWN"
-              switch meetingState {
-              case MobileRTCMeetingState_Idle:
-                  message = "MEETING_STATUS_IDLE"
-                  break
-              case MobileRTCMeetingState_Connecting:
-                  message = "MEETING_STATUS_CONNECTING"
-                  break
-              case MobileRTCMeetingState_InMeeting:
-                  message = "MEETING_STATUS_INMEETING"
-                  break
-              case MobileRTCMeetingState_WebinarPromote:
-                  message = "MEETING_STATUS_WEBINAR_PROMOTE"
-                  break
-              case MobileRTCMeetingState_WebinarDePromote:
-                  message = "MEETING_STATUS_WEBINAR_DEPROMOTE"
-                  break
-              default:
-                  message = "MEETING_STATUS_UNKNOWN"
-              }
-
-              result([message, ""])
-          } else {
-              result(["MEETING_STATUS_UNKNOWN", ""])
-          }
-      }
-
-  public func joinMeeting(call: FlutterMethodCall, result: FlutterResult) {
-
-    let meetingService = MobileRTC.shared().getMeetingService()
-    let meetingSettings = MobileRTC.shared().getMeetingSettings()
     
-    if meetingService != nil {
+    public func initZoom(call: FlutterMethodCall, result: @escaping FlutterResult)  {
         
-      let arguments = call.arguments as! Dictionary<String, String>
-
-      meetingService?.delegate = self
-
-      meetingSettings?.disableDriveMode(NSString(string: arguments["disableDrive"]!).boolValue)
-      meetingSettings?.disableCall(in: NSString(string: arguments["disableDialIn"]!).boolValue)
-
-      meetingSettings?.meetingShareHidden = NSString(string: arguments["disableShare"]!).boolValue
-      meetingSettings?.meetingInviteHidden = NSString(string: arguments["disableInvite"]!).boolValue
-
-      var params = [
-        kMeetingParam_Username: arguments["userId"]!,
-        kMeetingParam_MeetingNumber: arguments["meetingId"]!
-      ]
+        let pluginBundle = Bundle(for: type(of: self))
+        let pluginBundlePath = pluginBundle.bundlePath
+        let arguments = call.arguments as! Dictionary<String, String>
         
-      let hasPassword = arguments["meetingPassword"] != nil
-      if hasPassword {
-        params[kMeetingParam_MeetingPassword] = arguments["meetingPassword"]!
-      }
-        
-      let response = meetingService?.joinMeeting(with: params)
-
-      if let response = response {
-        print("Got response from join: \(response)")
-      }
-        result(true)
-    } else {
-        result(false)
+        MobileRTC.initialize(withDomain: arguments["domain"]!, enableLog: true, bundleResPath: pluginBundlePath)
+        let auth = MobileRTC.shared().getAuthService()
+        auth?.delegate = self.authenticationDelegate.onAuth(result)
+        auth?.clientKey = arguments["appKey"]!
+        auth?.clientSecret = arguments["appSecret"]!
+        auth?.sdkAuth()
     }
-  }
+    
+    public func meetingStatus(call: FlutterMethodCall, result: FlutterResult) {
+        
+        let meetingService = MobileRTC.shared().getMeetingService()
+        if meetingService != nil {
+            
+            let meetingState = meetingService?.getMeetingState()
+            let message = getStateMessage(meetingState)
+            
+            result([message, ""])
+        } else {
+            result(["MEETING_STATUS_UNKNOWN", ""])
+        }
+    }
+    
+    public func joinMeeting(call: FlutterMethodCall, result: FlutterResult) {
+        
+        let meetingService = MobileRTC.shared().getMeetingService()
+        let meetingSettings = MobileRTC.shared().getMeetingSettings()
+        
+        if meetingService != nil {
+            
+            let arguments = call.arguments as! Dictionary<String, String>
 
-
-
-
-  public func onMeetingError(_ error: MobileRTCMeetError, message: String?) {
-
-  }
-
-  public func getMeetErrorMessage(_ errorCode: MobileRTCMeetError) -> String {
-
+            meetingSettings?.disableDriveMode(NSString(string: arguments["disableDrive"]!).boolValue)
+            meetingSettings?.disableCall(in: NSString(string: arguments["disableDialIn"]!).boolValue)
+            meetingSettings?.meetingShareHidden = NSString(string: arguments["disableShare"]!).boolValue
+            meetingSettings?.meetingInviteHidden = NSString(string: arguments["disableInvite"]!).boolValue
+            
+            var params = [
+                kMeetingParam_Username: arguments["userId"]!,
+                kMeetingParam_MeetingNumber: arguments["meetingId"]!
+            ]
+            
+            let hasPassword = arguments["meetingPassword"] != nil
+            if hasPassword {
+                params[kMeetingParam_MeetingPassword] = arguments["meetingPassword"]!
+            }
+            
+            
+            let response = meetingService?.joinMeeting(with: params)
+            
+            if let response = response {
+                print("Got response from join: \(response)")
+            }
+            result(true)
+        } else {
+            result(false)
+        }
+    }
+    
+    public func onMeetingStateChange(_ state: MobileRTCMeetingState) {
+        print(state)
+        
+        guard let eventSink = eventSink else {
+          return
+        }
+        
+        eventSink(getStateMessage(state))
+    }
+    
+    public func getMeetErrorMessage(_ errorCode: MobileRTCMeetError) -> String {
+        
         let message = ""
         // switch (errorCode) {
         //     case MobileRTCAuthError_Success:
@@ -328,10 +314,47 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
         //         break
         // }
         return message
-  }
-
-  
-
-
-
+    }
+    
+    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        self.eventSink = events
+        
+        let meetingService = MobileRTC.shared().getMeetingService()
+        meetingService?.delegate = self
+        
+        return nil
+    }
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        eventSink = nil
+        return nil
+    }
+    
+    private func getStateMessage(_ state: MobileRTCMeetingState?) -> [String] {
+        
+        var message: [String]
+        
+        switch state {
+        case MobileRTCMeetingState_Idle:
+            message = ["MEETING_STATUS_IDLE", "No meeting is running"]
+            break
+        case MobileRTCMeetingState_Connecting:
+            message = ["MEETING_STATUS_CONNECTING", "Connect to the meeting server"]
+            break
+        case MobileRTCMeetingState_InMeeting:
+            message = ["MEETING_STATUS_INMEETING", "Meeting is ready and in process"]
+            break
+        case MobileRTCMeetingState_WebinarPromote:
+            message = ["MEETING_STATUS_WEBINAR_PROMOTE", "Upgrade the attendees to panelist in webinar"]
+            break
+        case MobileRTCMeetingState_WebinarDePromote:
+            message = ["MEETING_STATUS_WEBINAR_DEPROMOTE", "Demote the attendees from the panelist"]
+            break
+        default:
+            message = ["MEETING_STATUS_UNKNOWN", "Unknown error"]
+        }
+        
+        return message
+    }
+    
 }
