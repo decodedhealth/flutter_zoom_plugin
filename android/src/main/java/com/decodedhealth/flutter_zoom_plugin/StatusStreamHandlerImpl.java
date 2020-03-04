@@ -10,7 +10,7 @@ import us.zoom.sdk.MeetingServiceListener;
 import us.zoom.sdk.MeetingStatus;
 
 /**
- *
+ * This class implements the handler for the Zoom meeting event in the flutter event channel
  */
 public class StatusStreamHandlerImpl implements EventChannel.StreamHandler {
     private MeetingService meetingService;

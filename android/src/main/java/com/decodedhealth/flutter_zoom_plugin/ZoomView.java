@@ -17,6 +17,7 @@ import us.zoom.sdk.JoinMeetingOptions;
 import us.zoom.sdk.JoinMeetingParams;
 import us.zoom.sdk.MeetingService;
 import us.zoom.sdk.MeetingStatus;
+import us.zoom.sdk.ZoomError;
 import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKAuthenticationListener;
 import us.zoom.sdk.ZoomSDKInitParams;
@@ -24,24 +25,20 @@ import us.zoom.sdk.ZoomSDKInitializeListener;
 
 public class ZoomView  implements PlatformView,
         MethodChannel.MethodCallHandler,
-        ZoomSDKAuthenticationListener
-{
-    public static final String ZOOM_EVENT_STREAM = "com.decodedhealth/zoom_event_stream";
-
+        ZoomSDKAuthenticationListener {
     private final TextView textView;
     private final MethodChannel methodChannel;
     private final Context context;
     private final EventChannel meetingStatusChannel;
 
-
     ZoomView(Context context, BinaryMessenger messenger, int id) {
         textView = new TextView(context);
         this.context = context;
 
-        methodChannel = new MethodChannel(messenger, "flutter_zoom_plugin");
+        methodChannel = new MethodChannel(messenger, "com.decodedhealth/flutter_zoom_plugin");
         methodChannel.setMethodCallHandler(this);
 
-        meetingStatusChannel = new EventChannel(messenger, ZOOM_EVENT_STREAM);
+        meetingStatusChannel = new EventChannel(messenger, "com.decodedhealth/zoom_event_stream");
     }
 
     @Override
@@ -88,9 +85,17 @@ public class ZoomView  implements PlatformView,
                 new ZoomSDKInitializeListener() {
                     @Override
                     public void onZoomSDKInitializeResult(int errorCode, int internalErrorCode) {
-                        registerMeetingServiceListener();
-
                         List<Integer> response = Arrays.asList(errorCode, internalErrorCode);
+
+                        if (errorCode != ZoomError.ZOOM_ERROR_SUCCESS) {
+                            System.out.println("Failed to initialize Zoom SDK");
+                            result.success(response);
+                            return;
+                        }
+
+                        ZoomSDK zoomSDK = ZoomSDK.getInstance();
+                        MeetingService meetingService = zoomSDK.getMeetingService();
+                        meetingStatusChannel.setStreamHandler(new StatusStreamHandlerImpl(meetingService));
                         result.success(response);
                     }
                 },
@@ -152,13 +157,6 @@ public class ZoomView  implements PlatformView,
 
         MeetingStatus status = meetingService.getMeetingStatus();
         result.success(status != null ? Arrays.asList(status.name(), "") :  Arrays.asList("MEETING_STATUS_UNKNOWN", "No status available"));
-    }
-
-    private void registerMeetingServiceListener() {
-        ZoomSDK zoomSDK = ZoomSDK.getInstance();
-        MeetingService meetingService = zoomSDK.getMeetingService();
-        if(meetingService != null)
-            meetingStatusChannel.setStreamHandler(new StatusStreamHandlerImpl(meetingService));
     }
 
     @Override
