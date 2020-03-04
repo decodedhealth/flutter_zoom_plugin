@@ -11,8 +11,8 @@ class MeetingWidget extends StatelessWidget {
   MeetingWidget({Key key, meetingId, meetingPassword}) : super(key: key) {
     this.zoomOptions = new ZoomOptions(
       domain: "zoom.us",
-      appKey: "KeTsoefS3ue2BGqwaQwYRjP7mYpqWfSUXqYt",
-      appSecret: "vvHfLvHKXtSePfX6b8MVhitVCXmzzWGAxGoj",
+      appKey: "appKey",
+      appSecret: "appSecret",
     );
     this.meetingOptions = new ZoomMeetingOptions(
         userId: 'example',
@@ -22,17 +22,6 @@ class MeetingWidget extends StatelessWidget {
         disableDrive: "true",
         disableInvite: "true",
         disableShare: "true"
-    );
-  }
-
-  void _showToast(BuildContext context, String message) {
-    final scaffold = Scaffold.of(context);
-    scaffold.showSnackBar(
-      SnackBar(
-        content: Text(message),
-        action: SnackBarAction(
-            label: 'Hide', onPressed: scaffold.hideCurrentSnackBar),
-      ),
     );
   }
 
@@ -52,26 +41,22 @@ class MeetingWidget extends StatelessWidget {
           controller.initZoom(this.zoomOptions)
               .then((results) {
 
-            controller.zoomStatusEvents.listen((status) {
-              print("Status in: " + status[0] + " - " + status[1]);
-              if (status[0] == "MEETING_STATUS_IDLE") {
-                Navigator.of(context).pop();
-              }
-            });
-
             print("initialised");
             print(results);
 
             if(results[0] == 0) {
+
+              controller.zoomStatusEvents.listen((status) {
+                print("Status in: " + status[0] + " - " + status[1]);
+                if (status[0] == "MEETING_STATUS_IDLE") {
+                  Navigator.of(context).pop();
+                }
+              });
+
+              print("listen on event channel");
+
               controller.joinMeeting(this.meetingOptions)
                   .then((joinMeetingResult) {
-
-//                controller.zoomStatusEvents.listen((status) {
-//                  print("Status in: " + status[0] + " - " + status[1]);
-//                  if (status[0] == "MEETING_STATUS_IDLE") {
-//                    Navigator.of(context).pop();
-//                  }
-//                });
 
                 controller.meetingStatus(this.meetingOptions.meetingId)
                     .then((status) {
