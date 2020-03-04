@@ -47,7 +47,7 @@ class MeetingWidget extends StatelessWidget {
             if(results[0] == 0) {
 
               controller.zoomStatusEvents.listen((status) {
-                print("Status in: " + status[0] + " - " + status[1]);
+                print("Status event: " + status[0] + " - " + status[1]);
                 if (status[0] == "MEETING_STATUS_IDLE") {
                   Navigator.of(context).pop();
                 }
@@ -74,6 +74,5 @@ class MeetingWidget extends StatelessWidget {
       ),
     );
   }
-
 
 }

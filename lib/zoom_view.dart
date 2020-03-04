@@ -55,12 +55,10 @@ class _ZoomViewState extends State<ZoomView> {
 class ZoomViewController {
 
   ZoomViewController._(int id) :
-        _channel = new MethodChannel('flutter_zoom_plugin'),
-        _zoomStatusEventChannel = new EventChannel(statusStream);
+        _methodChannel = new MethodChannel('com.decodedhealth/flutter_zoom_plugin'),
+        _zoomStatusEventChannel = new EventChannel("com.decodedhealth/zoom_event_stream");
 
-  static const String statusStream = "com.decodedhealth/zoom_event_stream";
-
-  final MethodChannel _channel;
+  final MethodChannel _methodChannel;
   final EventChannel _zoomStatusEventChannel;
 
   Future<List> initZoom(ZoomOptions options) async {
@@ -71,7 +69,7 @@ class ZoomViewController {
     optionMap.putIfAbsent("appSecret", () => options.appSecret);
     optionMap.putIfAbsent("domain", () => options.domain);
 
-    return _channel.invokeMethod('init', optionMap);
+    return _methodChannel.invokeMethod('init', optionMap);
   }
 
   Future<bool> joinMeeting(ZoomMeetingOptions options) async {
@@ -86,7 +84,7 @@ class ZoomViewController {
     optionMap.putIfAbsent("disableInvite", () => options.disableInvite);
     optionMap.putIfAbsent("disableShare", () => options.disableShare);
 
-    return _channel.invokeMethod('join', optionMap);
+    return _methodChannel.invokeMethod('join', optionMap);
   }
 
 
@@ -96,7 +94,7 @@ class ZoomViewController {
     var optionMap = new Map<String, String>();
     optionMap.putIfAbsent("meetingId", () => meetingId);
 
-    return _channel.invokeMethod('meeting_status', optionMap);
+    return _methodChannel.invokeMethod('meeting_status', optionMap);
   }
 
   Stream<dynamic> get zoomStatusEvents {
