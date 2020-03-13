@@ -12,11 +12,11 @@ import us.zoom.sdk.MeetingStatus;
 /**
  * This class implements the handler for the Zoom meeting event in the flutter event channel
  */
-public class StatusStreamHandlerImpl implements EventChannel.StreamHandler {
+public class StatusStreamHandler implements EventChannel.StreamHandler {
     private MeetingService meetingService;
     private MeetingServiceListener statusListener;
 
-    public StatusStreamHandlerImpl(MeetingService meetingService) {
+    public StatusStreamHandler(MeetingService meetingService) {
         this.meetingService = meetingService;
     }
 
@@ -26,13 +26,13 @@ public class StatusStreamHandlerImpl implements EventChannel.StreamHandler {
             @Override
             public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
 
-                events.success(getMeetingStatusMessage(meetingStatus));
-
-                if(meetingStatus == MeetingStatus.MEETING_STATUS_FAILED && errorCode == MeetingError.MEETING_ERROR_CLIENT_INCOMPATIBLE) {
-                    events.error("MEETING_ERROR_CLIENT_INCOMPATIBLE",
-                            "Version of ZoomSDK is too low!",
-                            null);
+                if(meetingStatus == MeetingStatus.MEETING_STATUS_FAILED &&
+                        errorCode == MeetingError.MEETING_ERROR_CLIENT_INCOMPATIBLE) {
+                    events.success(Arrays.asList("MEETING_STATUS_UNKNOWN", "Version of ZoomSDK is too low"));
+                    return;
                 }
+
+                events.success(getMeetingStatusMessage(meetingStatus));
             }
         };
 

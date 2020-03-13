@@ -370,6 +370,4 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
         return message
     }
     
-    
-    
 }

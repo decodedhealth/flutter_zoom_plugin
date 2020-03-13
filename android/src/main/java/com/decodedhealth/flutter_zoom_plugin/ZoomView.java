@@ -95,7 +95,7 @@ public class ZoomView  implements PlatformView,
 
                         ZoomSDK zoomSDK = ZoomSDK.getInstance();
                         MeetingService meetingService = zoomSDK.getMeetingService();
-                        meetingStatusChannel.setStreamHandler(new StatusStreamHandlerImpl(meetingService));
+                        meetingStatusChannel.setStreamHandler(new StatusStreamHandler(meetingService));
                         result.success(response);
                     }
                 },
