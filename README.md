@@ -12,9 +12,9 @@ Use the git tags for deployments as milestones as the master branch is considere
 
 ## Zoom Versions
 
-Android: https://github.com/zoom/zoom-sdk-android/releases/tag/v4.4.56656.1030
+Android: https://github.com/zoom/zoom-sdk-android/releases/tag/v4.6.15086.0209
  
-iOS: https://github.com/zoom/zoom-sdk-ios/releases/tag/v4.4.56624.1028
+iOS: https://github.com/zoom/zoom-sdk-ios/releases/tag/v4.6.15084.0206
 
 ## Getting Started
 
