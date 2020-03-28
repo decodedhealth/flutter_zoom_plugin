@@ -83,6 +83,12 @@ public class ZoomView  implements PlatformView,
         zoomSDK.initialize(
                 context,
                 new ZoomSDKInitializeListener() {
+
+                    @Override
+                    public void onZoomAuthIdentityExpired() {
+
+                    }
+
                     @Override
                     public void onZoomSDKInitializeResult(int errorCode, int internalErrorCode) {
                         List<Integer> response = Arrays.asList(errorCode, internalErrorCode);
@@ -162,6 +168,10 @@ public class ZoomView  implements PlatformView,
     @Override
     public void dispose() {}
 
+    @Override
+    public void onZoomAuthIdentityExpired() {
+
+    }
 
     @Override
     public void onZoomSDKLoginResult(long result) {
