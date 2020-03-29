@@ -39,9 +39,7 @@ public class AuthenticationDelegate: NSObject, MobileRTCAuthDelegate {
     
     
     public func onMobileRTCAuthReturn(_ returnValue: MobileRTCAuthError) {
-        
-        print("Authentication returned \(returnValue)")
-        
+
         if returnValue == MobileRTCAuthError_Success {
             self.result?([0, 0])
         } else {
