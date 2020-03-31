@@ -74,7 +74,6 @@ class ZoomViewController {
 
   Future<bool> joinMeeting(ZoomMeetingOptions options) async {
     assert(options != null);
-
     var optionMap = new Map<String, String>();
     optionMap.putIfAbsent("userId", () => options.userId);
     optionMap.putIfAbsent("meetingId", () => options.meetingId);
