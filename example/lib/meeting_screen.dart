@@ -22,7 +22,7 @@ class MeetingWidget extends StatelessWidget {
         disableDrive: "true",
         disableInvite: "true",
         disableShare: "true",
-        noDisconnectAudio: "true"
+        noDisconnectAudio: "false"
     );
   }
 

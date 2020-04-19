@@ -127,7 +127,7 @@ public class ZoomView  implements PlatformView,
         opts.no_share = parseBoolean(options, "disableShare", false);
         opts.no_driving_mode = parseBoolean(options, "disableDrive", false);
         opts.no_dial_in_via_phone = parseBoolean(options, "disableDialIn", false);
-        opts.no_disconnect_audio = parseBoolean(options, "noDisconnectAudio", true);
+        opts.no_disconnect_audio = parseBoolean(options, "noDisconnectAudio", false);
         opts.no_audio = parseBoolean(options, "noAudio", false);
 
         JoinMeetingParams params = new JoinMeetingParams();
