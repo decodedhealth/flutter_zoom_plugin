@@ -28,3 +28,6 @@ flutter:
         pluginClass: FlutterZoomPlugin
       ios:
         pluginClass: FlutterZoomPlugin
+      web:
+        pluginClass: FlutterZoomPlugin
+        fileName: zoom_web.dart
