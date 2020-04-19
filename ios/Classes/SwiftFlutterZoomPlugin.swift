@@ -254,7 +254,9 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
             
             meetingSettings?.disableDriveMode(NSString(string: arguments["disableDrive"]!).boolValue)
             meetingSettings?.disableCall(in: NSString(string: arguments["disableDialIn"]!).boolValue)
-            
+            meetingSettings?.setAutoConnectInternetAudio(in: NSString(string: arguments["noDisconnectAudio"]!).boolValue)
+            meetingSettings?.setMuteAudioWhenJoinMeeting(in: NSString(string: arguments["noAudio"]!).boolValue)
+
             meetingSettings?.meetingShareHidden = NSString(string: arguments["disableShare"]!).boolValue
             meetingSettings?.meetingInviteHidden = NSString(string: arguments["disableInvite"]!).boolValue
             
