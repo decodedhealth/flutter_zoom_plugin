@@ -273,4 +273,16 @@
  */
 - (void)enableShowMyMeetingElapseTime:(BOOL)enable;
 
+/*!
+@brief Set the visibility of reaction on meeting UI. Default is displaying.
+@param hidden YES means hide reaction emotion.
+*/
+- (void)hideReactionsOnMeetingUI:(BOOL)hidden;
+
+/*!
+@brief pre populate webinar registration info.
+@param email registration email address.
+@param username registration username.
+*/
+- (void)prePopulateWebinarRegistrationInfo:(nonnull NSString *)email username:(nonnull NSString *)username;
 @end
