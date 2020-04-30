@@ -58,7 +58,7 @@ Change the minimum Android sdk version to at the minimum 21 in your `android/app
 minSdkVersion 21
 ```
 
-### Example
+## Example
 
 ```dart
 class MeetingWidget extends StatelessWidget {
@@ -162,7 +162,7 @@ For iOS:
 - `MEETING_STATUS_WEBINAR_DEPROMOTE`
 - `MEETING_STATUS_UNKNOWN`
 
-For Android
+For Android:
 - `MEETING_STATUS_IDLE`
 - `MEETING_STATUS_CONNECTING`
 - `MEETING_STATUS_INMEETING`
