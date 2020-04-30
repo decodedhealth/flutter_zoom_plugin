@@ -250,24 +250,23 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
         
         if meetingService != nil {
             
-            let arguments = call.arguments as! Dictionary<String, String>
+            let arguments = call.arguments as! Dictionary<String, String?>
             
-            meetingSettings?.disableDriveMode(NSString(string: arguments["disableDrive"]!).boolValue)
-            meetingSettings?.disableCall(in: NSString(string: arguments["disableDialIn"]!).boolValue)
-            meetingSettings?.setAutoConnectInternetAudio(in: NSString(string: arguments["noDisconnectAudio"]!).boolValue)
-            meetingSettings?.setMuteAudioWhenJoinMeeting(in: NSString(string: arguments["noAudio"]!).boolValue)
-
-            meetingSettings?.meetingShareHidden = NSString(string: arguments["disableShare"]!).boolValue
-            meetingSettings?.meetingInviteHidden = NSString(string: arguments["disableInvite"]!).boolValue
-            
+            meetingSettings?.disableDriveMode(parseBoolean(data: arguments["disableDrive"]!, defaultValue: false))
+            meetingSettings?.disableCall(in: parseBoolean(data: arguments["disableDialIn"]!, defaultValue: false))
+            meetingSettings?.setAutoConnectInternetAudio(parseBoolean(data: arguments["noDisconnectAudio"]!, defaultValue: false))
+            meetingSettings?.setMuteAudioWhenJoinMeeting(parseBoolean(data: arguments["noAudio"]!, defaultValue: false))
+            meetingSettings?.meetingShareHidden = parseBoolean(data: arguments["disableShare"]!, defaultValue: false)
+            meetingSettings?.meetingInviteHidden = parseBoolean(data: arguments["disableDrive"]!, defaultValue: false)
+       
             var params = [
-                kMeetingParam_Username: arguments["userId"]!,
-                kMeetingParam_MeetingNumber: arguments["meetingId"]!
+                kMeetingParam_Username: arguments["userId"]!!,
+                kMeetingParam_MeetingNumber: arguments["meetingId"]!!
             ]
             
-            let hasPassword = arguments["meetingPassword"] != nil
+            let hasPassword = arguments["meetingPassword"]! != nil
             if hasPassword {
-                params[kMeetingParam_MeetingPassword] = arguments["meetingPassword"]!
+                params[kMeetingParam_MeetingPassword] = arguments["meetingPassword"]!!
             }
             
             let response = meetingService?.joinMeeting(with: params)
@@ -279,6 +278,17 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
         } else {
             result(false)
         }
+    }
+    
+    private func parseBoolean(data: String?, defaultValue: Bool) -> Bool {
+        var result: Bool
+        
+        if let unwrappeData = data {
+            result = NSString(string: unwrappeData).boolValue
+        } else {
+            result = defaultValue
+        }
+        return result
     }
     
     
