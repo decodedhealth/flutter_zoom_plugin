@@ -1,5 +1,7 @@
 # Flutter Zoom Plugin
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 A Flutter plugin for the Zoom SDK.
 
 *Note*: This plugin is still under active development, and some Zoom features might not be available yet. We are working to add more features.
@@ -7,9 +9,9 @@ Feedback and Pull Requests are always welcome.
 
 ## Zoom SDK Versions
 
-Android: https://github.com/zoom/zoom-sdk-android/releases/tag/v4.6.15086.0209
+Android: https://github.com/zoom/zoom-sdk-android/releases/tag/v4.6.21666.0429
  
-iOS: https://github.com/zoom/zoom-sdk-ios/releases/tag/v4.6.15084.0206
+iOS: https://github.com/zoom/zoom-sdk-ios/releases/tag/v4.6.21666.0428
 
 ## Installation
 
@@ -21,10 +23,10 @@ Use the git tags for deployments as milestones as the master branch is considere
     flutter_zoom_plugin:
        git:
          url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-         ref: 0.0.4
+         ref: 0.0.5
 ```
 
-Please use `master` for Apple app store build deployments. To test on an iOS simulator please use branch `master_dev`
+Please use `master` for Apple app store build deployments. 
 
 ```yaml
     flutter_zoom_plugin:
@@ -49,6 +51,30 @@ Or in text format add the key:
 <key>NSMicrophoneUsageDescription</key>
 <string>Need to use the microphone for call</string>
 ```
+
+**Testing on the iOS simulator**
+
+Firstly, please ensure you are on the ```master_dev``` branch when testing or the simulator will **not** work. 
+
+To test on a simulator is only supported using the development sdk of zoom. Unfortunately uncompressed the MobileRTC 
+exceeds 100mb and therefore without LFS cannot pushed to github. 
+To get around this the zip file has been pushed and an additional command needs to be run in order to decompress the sdk.
+
+Steps to use the master_dev.
+
+1. Update your pubspec.yaml
+    ```yaml
+        flutter_zoom_plugin:
+           git:
+             url: git://github.com/decodedhealth/flutter_zoom_plugin.git
+             ref: master_dev
+    ```
+2. Run the following
+    ```shell script
+    flutter clean
+    flutter pub get
+    flutter pub run bin/unzip_zoom_sdk
+    ```
 
 ### Android
 
