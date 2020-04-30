@@ -70,9 +70,8 @@ Steps to use the master_dev.
             url: git://github.com/decodedhealth/flutter_zoom_plugin.git
             ref: master_dev
     ```
-2. Run the following
+2. Run the following shell script
     ```bash
-    shell script
     flutter clean
     flutter pub get
     flutter pub run bin/unzip_zoom_sdk
