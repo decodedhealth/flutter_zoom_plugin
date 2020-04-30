@@ -20,19 +20,19 @@ First, add `flutter_zoom_plugin` as a [dependency in your pubspec.yaml file](htt
 Use the git tags for deployments as milestones as the master branch is considered active development.
 
 ```yaml
-    flutter_zoom_plugin:
-       git:
-         url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-         ref: 0.0.5
+  flutter_zoom_plugin:
+      git:
+        url: git://github.com/decodedhealth/flutter_zoom_plugin.git
+        ref: 0.0.5
 ```
 
 Please use `master` for Apple app store build deployments. 
 
 ```yaml
-    flutter_zoom_plugin:
-       git:
-         url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-         ref: master
+  flutter_zoom_plugin:
+      git:
+        url: git://github.com/decodedhealth/flutter_zoom_plugin.git
+        ref: master
 ```
 
 
@@ -52,25 +52,27 @@ Or in text format add the key:
 <string>Need to use the microphone for call</string>
 ```
 
-**Testing on the iOS simulator**
+**NOTE for testing on the iOS simulator**
 
-Firstly, please ensure you are on the ```master_dev``` branch when testing or the simulator will **not** work. 
+Firstly, please ensure you are on the `master_dev` branch when testing or the simulator will **NOT** work. 
 
-To test on a simulator is only supported using the development sdk of zoom. Unfortunately uncompressed the MobileRTC 
-exceeds 100mb and therefore without LFS cannot pushed to github. 
-To get around this the zip file has been pushed and an additional command needs to be run in order to decompress the sdk.
+Testing on a simulator is only supported using the development SDK of Zoom. Unfortunately, the uncompressed MobileRTC 
+exceeds 100mb and therefore without LFS cannot pushed to Github. 
+
+To get around this, the zip file has been pushed and an additional command needs to be run in order to decompress the sdk.
 
 Steps to use the master_dev.
 
 1. Update your pubspec.yaml
     ```yaml
-        flutter_zoom_plugin:
-           git:
-             url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-             ref: master_dev
+      flutter_zoom_plugin:
+          git:
+            url: git://github.com/decodedhealth/flutter_zoom_plugin.git
+            ref: master_dev
     ```
 2. Run the following
-    ```shell script
+    ```bash
+    shell script
     flutter clean
     flutter pub get
     flutter pub run bin/unzip_zoom_sdk
