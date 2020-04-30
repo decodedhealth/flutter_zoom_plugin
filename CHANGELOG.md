@@ -1,3 +1,6 @@
+## 0.0.4
+
+* Streaming api for meeting status
 ## 0.0.5
 
 * Enhancements

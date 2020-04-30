@@ -2,7 +2,7 @@ name: flutter_zoom_plugin
 description: A flutter plugin for the Zoom SDK.
 version: 0.0.5
 homepage: https://decodedhealth.com
-
+issue_tracker: https://github.com/decodedhealth/flutter_zoom_plugin/issues
 environment:
   sdk: ">=2.1.0 <3.0.0"
   flutter: ">=1.12.0 <2.0.0"
