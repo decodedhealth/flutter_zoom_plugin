@@ -20,19 +20,19 @@ First, add `flutter_zoom_plugin` as a [dependency in your pubspec.yaml file](htt
 Use the git tags for deployments as milestones as the master branch is considered active development.
 
 ```yaml
-    flutter_zoom_plugin:
-       git:
-         url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-         ref: 0.0.5
+  flutter_zoom_plugin:
+      git:
+        url: git://github.com/decodedhealth/flutter_zoom_plugin.git
+        ref: 0.0.5
 ```
 
 Please use `master` for Apple app store build deployments. 
 
 ```yaml
-    flutter_zoom_plugin:
-       git:
-         url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-         ref: master
+  flutter_zoom_plugin:
+      git:
+        url: git://github.com/decodedhealth/flutter_zoom_plugin.git
+        ref: master
 ```
 
 
@@ -52,7 +52,7 @@ Or in text format add the key:
 <string>Need to use the microphone for call</string>
 ```
 
-**Testing on the iOS simulator**
+**NOTE for testing on the iOS simulator**
 
 If you want to test the iOS Simulator you will need to ensure you have the iOS dev sdk as a dependency. To do this you will need to
 run the following command.
@@ -77,7 +77,7 @@ Change the minimum Android sdk version to at the minimum 21 in your `android/app
 minSdkVersion 21
 ```
 
-### Example
+## Example
 
 ```dart
 class MeetingWidget extends StatelessWidget {
@@ -181,7 +181,7 @@ For iOS:
 - `MEETING_STATUS_WEBINAR_DEPROMOTE`
 - `MEETING_STATUS_UNKNOWN`
 
-For Android
+For Android:
 - `MEETING_STATUS_IDLE`
 - `MEETING_STATUS_CONNECTING`
 - `MEETING_STATUS_INMEETING`
