@@ -1,3 +1,11 @@
-## 0.0.4
+## 0.0.5
 
-* TODO: Describe initial release.
+* Enhancements
+
+    * Additional flags:   
+  ```
+  String noDisconnectAudio; 
+  String noAudio;
+  ```
+    * Upgrade Zoom to support GCM.
+    * Drop the android min sdk to 21

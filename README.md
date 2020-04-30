@@ -54,27 +54,20 @@ Or in text format add the key:
 
 **Testing on the iOS simulator**
 
-Firstly, please ensure you are on the ```master_dev``` branch when testing or the simulator will **not** work. 
-
-To test on a simulator is only supported using the development sdk of zoom. Unfortunately uncompressed the MobileRTC 
-exceeds 100mb and therefore without LFS cannot pushed to github. 
-To get around this the zip file has been pushed and an additional command needs to be run in order to decompress the sdk.
+If you want to test the iOS Simulator you will need to ensure you have the iOS dev sdk as a dependency. To do this you will need to
+run the following command.
 
 Steps to use the master_dev.
 
-1. Update your pubspec.yaml
-    ```yaml
-        flutter_zoom_plugin:
-           git:
-             url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-             ref: master_dev
-    ```
-2. Run the following
+1. Run the following
     ```shell script
-    flutter clean
-    flutter pub get
-    flutter pub run bin/unzip_zoom_sdk
+    flutter pub run bin/unzip_zoom_sdk dev
     ```
+To switch back simply run
+
+```shell script
+flutter pub run bin/unzip_zoom_sdk dev
+```
 
 ### Android
 
