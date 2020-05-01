@@ -21,6 +21,8 @@ class ZoomMeetingOptions {
   String disableDrive;
   String disableInvite;
   String disableShare;
+  String noDisconnectAudio;
+  String noAudio;
 
   ZoomMeetingOptions({
     this.userId,
@@ -29,6 +31,8 @@ class ZoomMeetingOptions {
     this.disableDialIn,
     this.disableDrive,
     this.disableInvite,
-    this.disableShare
+    this.disableShare,
+    this.noDisconnectAudio,
+    this.noAudio
   });
 }

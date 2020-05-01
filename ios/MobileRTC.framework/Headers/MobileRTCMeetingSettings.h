@@ -260,4 +260,29 @@
  @param YES means speaker off, otherwise not
  */
 - (void)setSpeakerOffWhenInMeeting:(BOOL)speakerOff;
+
+/*!
+ @brief Query show meeting elapse time.
+ @return YES means show meeting elapse time, otherwise not.
+ */
+- (BOOL)showMyMeetingElapseTime;
+
+/*!
+ @brief Enable show meeting elapse time.
+ @param enable YES means show meeting elapse time, otherwise not.
+ */
+- (void)enableShowMyMeetingElapseTime:(BOOL)enable;
+
+/*!
+@brief Set the visibility of reaction on meeting UI. Default is displaying.
+@param hidden YES means hide reaction emotion.
+*/
+- (void)hideReactionsOnMeetingUI:(BOOL)hidden;
+
+/*!
+@brief pre populate webinar registration info.
+@param email registration email address.
+@param username registration username.
+*/
+- (void)prePopulateWebinarRegistrationInfo:(nonnull NSString *)email username:(nonnull NSString *)username;
 @end

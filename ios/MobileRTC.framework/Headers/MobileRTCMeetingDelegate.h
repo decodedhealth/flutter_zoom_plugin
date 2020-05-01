@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MobileRTCVideoRawData.h"
 #import "MobileRTCAudioRawData.h"
+#import "MobileRTCBORole.h"
 
 #pragma mark - MobileRTCMeetingServiceDelegate
 /*!
@@ -117,10 +118,12 @@
  @brief Inform user that free meeting will be ended in 10 minutes.
  @param host YES means the original host of the current meeting, otherwise not.
  @param freeUpgrade YES means the current free meeting will be upgraded. Once upgraded, the current meeting can last for more than 40 minutes.
+ @param first and second time, meeting is no limit, from third time, will end meeting at 40 mins.
  @param completion MobileRTC will call the module to upgrade the current meeting once the parameter UPGRADE is YES.
  */
 - (void)onFreeMeetingReminder:(BOOL)host
                canFreeUpgrade:(BOOL)freeUpgrade
+                  isFirstGift:(BOOL)first
                    completion:(void (^_Nonnull)(BOOL upgrade))completion;
 
 /*!
@@ -230,6 +233,13 @@
  @brief Callback event that waiting room status changes. 
  */
 - (void)onWaitingRoomStatusChange:(BOOL)needWaiting;
+
+/*!
+@brief The function will be invoked when the chat privilege of attendees changes.
+@return currentPrivilege The chat privilege of the current attendee.
+@warning only normal meeting(non webinar meeting) can get the callback.
+*/
+- (void)onSinkAttendeeChatPriviledgeChanged:(MobileRTCMeetingChatPriviledgeType)currentPrivilege;
 @end
 
 #pragma mark - MobileRTCAudioServiceDelegate
@@ -318,6 +328,13 @@
  @brief Callback event that host requests to unmute the user's video. 
  */
 - (void)onSinkMeetingVideoRequestUnmuteByHost:(void (^_Nonnull)(BOOL Accept))completion;
+
+/*!
+ @brief Callback event that show minimize meeting or back zoom UI.
+ @param state The state of minimizeMeeting or ZoomUIMeeting.
+ @warning The call back only for ZoomUI, Custom UI will not be executed.
+ */
+- (void)onSinkMeetingShowMinimizeMeetingOrBackZoomUI:(MobileRTCMinimizeMeetingState)state;
 @end
 
 #pragma mark - MobileRTCUserServiceDelegate
@@ -420,7 +437,7 @@
 @protocol MobileRTCWebinarServiceDelegate <MobileRTCMeetingServiceDelegate>
 
 /*!
- @brief Callback event when Question and Answer(Q&A) conneAnswerction starts.【【【可能要XX】】】
+ @brief Callback event when Question and Answer(Q&A) conneAnswerction starts.
  */
 - (void)onSinkQAConnectStarted;
 
@@ -431,10 +448,80 @@
 - (void)onSinkQAConnected:(BOOL)connected;
 
 /*!
+ @brief Callback event when Q&A refresh Data
+ @warning The callback notifies the user that the QA data has been reloaded after the meeting is reconnected.
+ */
+- (void)OnRefreshQAData;
+
+/*!
  @brief Callback event when the open-ended question changes.
  @param count The amount of open-ended questions.
  */
 - (void)onSinkQAOpenQuestionChanged:(NSInteger)count;
+
+/*!
+ @brief Callback event when add a new question.
+ @param questionID question id.
+ @param success success or not.
+ */
+- (void)onSinkQAAddQuestion:(NSString *_Nonnull)questionID success:(BOOL)success;
+
+/*!
+ @brief Callback event when add a new answer.
+ @param answerID answer user id.
+ @param success success or not.
+ */
+- (void)onSinkQAAddAnswer:(NSString *_Nonnull)answerID success:(BOOL)success;
+
+/*!
+ @brief Callback event when the new question is marked as dismissed.
+ @param questionID The question ID.
+ */
+- (void)onSinkQuestionMarkedAsDismissed:(NSString *_Nonnull)questionID;
+
+/*!
+ @brief Callback event when the question is opened.
+ @param questionID The question ID.
+ */
+- (void)onSinkReopenQuestion:(NSString *_Nonnull)questionID;
+
+/*!
+ @brief Callback event when a new question is received.
+ @param questionID The question ID.
+ */
+- (void)onSinkReceiveQuestion:(NSString *_Nonnull)questionID;
+
+/*!
+ @brief Callback event when a new answer is received.
+ @param questionID The question ID.
+ */
+- (void)onSinkReceiveAnswer:(NSString *_Nonnull)answerID;
+
+/*!
+ @brief Callback event when the question is living reply.
+ @param questionID The question ID.
+ */
+- (void)onSinkUserLivingReply:(NSString *_Nonnull)questionID;
+
+/*!
+ @brief Callback event when the question end living reply.
+ @param questionID The question ID.
+ */
+- (void)onSinkUserEndLiving:(NSString *_Nonnull)questionID;
+
+/*!
+ @brief Callback event when the question is upvote.
+ @param questionID The question ID.
+ @param order_changed order change
+ */
+- (void)onSinkVoteupQuestion:(NSString *_Nonnull)questionID orderChanged:(BOOL)orderChanged;
+
+/*!
+ @brief Callback event when the question is revoke upvote.
+ @param questionID The question ID.
+ @param order_changed order change
+ */
+- (void)onSinkRevokeVoteupQuestion:(NSString *_Nonnull)questionID orderChanged:(BOOL)orderChanged;
 
 /*!
  @brief Callback event of the permission that user is allowed to ask questions anonymously is changed.
@@ -481,18 +568,21 @@
 /*!
  @brief The function will be invoked once the amount of the attendee is promoted successfully from attendee to panelist.
  @return errorCode Promotion successful or error type.
+ @warning Only meeting host/co-host can get the callback.
  */
 - (void)onSinkPromptAttendee2PanelistResult:(MobileRTCWebinarPromoteorDepromoteError)errorCode;
 
 /*!
  @brief The function will be invoked when panelist is demoted successfully from panelist to attendee.
  @return errorCode Demotion successful or error type.
+ @warning Only meeting host/co-host can get the callback.
  */
 - (void)onSinkDePromptPanelist2AttendeeResult:(MobileRTCWebinarPromoteorDepromoteError)errorCode;
 
 /*!
  @brief The function will be invoked when the chat privilege of attendees changes.
  @return currentPrivilege The chat privilege of the current attendee.
+ @warning only webinar meeting can get the callback.
  */
 - (void)onSinkAllowAttendeeChatNotification:(MobileRTCChatAllowAttendeeChat)currentPrivilege;
 @end
@@ -613,3 +703,72 @@
 
 @end
 
+#pragma mark - MobileRTCBOServiceDelegate
+@protocol MobileRTCBOServiceDelegate <MobileRTCMeetingServiceDelegate>
+
+@optional
+/*!
+@brief This method will notify the creator role gived.
+*/
+- (void)onHasCreatorRightsNotification:(MobileRTCBOCreator *_Nonnull)creator;
+
+/*!
+@brief This method will notify the admin role gived.
+*/
+- (void)onHasAdminRightsNotification:(MobileRTCBOAdmin * _Nonnull)admin;
+
+/*!
+@brief This method will notify the assistent role gived.
+*/
+- (void)onHasAssistantRightsNotification:(MobileRTCBOAssistant * _Nonnull)assistant;
+
+/*!
+@brief This method will notify the attendee role gived.
+*/
+- (void)onHasAttendeeRightsNotification:(MobileRTCBOAttendee * _Nonnull)attendee;
+
+/*!
+@brief This method will notify the data helper role gived.
+*/
+- (void)onHasDataHelperRightsNotification:(MobileRTCBOData * _Nonnull)dataHelper;
+
+/*!
+@brief This method will notify that lost creator role.
+*/
+- (void)onLostCreatorRightsNotification;
+
+/*!
+@brief This method will notify that lost admin role.
+*/
+- (void)onLostAdminRightsNotification;
+
+/*!
+@brief This method will notify that lost assistant role.
+*/
+- (void)onLostAssistantRightsNotification;
+
+/*!
+@brief This method will notify that lost attendee role.
+*/
+- (void)onLostAttendeeRightsNotification;
+
+/*!
+@brief This method will notify that lost data helper role.
+*/
+- (void)onLostDataHelperRightsNotification;
+
+@end
+
+#pragma mark - MobileRTCBOServiceDelegate
+@protocol MobileRTCBODataDelegate <MobileRTCMeetingServiceDelegate>
+/*!
+@brief The bo meeting information updated.
+*/
+- (void)onBOInfoUpdated:(NSString *_Nullable)boId;
+
+/*!
+@brief The un-assigned user update.
+*/
+- (void)onUnAssignedUserUpdated;
+
+@end

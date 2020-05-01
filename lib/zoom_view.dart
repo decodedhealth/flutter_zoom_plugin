@@ -74,7 +74,6 @@ class ZoomViewController {
 
   Future<bool> joinMeeting(ZoomMeetingOptions options) async {
     assert(options != null);
-
     var optionMap = new Map<String, String>();
     optionMap.putIfAbsent("userId", () => options.userId);
     optionMap.putIfAbsent("meetingId", () => options.meetingId);
@@ -83,6 +82,8 @@ class ZoomViewController {
     optionMap.putIfAbsent("disableDrive", () => options.disableDrive);
     optionMap.putIfAbsent("disableInvite", () => options.disableInvite);
     optionMap.putIfAbsent("disableShare", () => options.disableShare);
+    optionMap.putIfAbsent("noDisconnectAudio", () => options.noDisconnectAudio);
+    optionMap.putIfAbsent("noAudio", () => options.noAudio);
 
     return _methodChannel.invokeMethod('join', optionMap);
   }

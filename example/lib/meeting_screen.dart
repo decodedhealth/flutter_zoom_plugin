@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter_zoom_plugin/zoom_view.dart';
 import 'package:flutter_zoom_plugin/zoom_options.dart';
 
@@ -7,6 +10,8 @@ class MeetingWidget extends StatelessWidget {
 
   ZoomOptions zoomOptions;
   ZoomMeetingOptions meetingOptions;
+
+  Timer timer;
 
   MeetingWidget({Key key, meetingId, meetingPassword}) : super(key: key) {
     this.zoomOptions = new ZoomOptions(
@@ -21,8 +26,21 @@ class MeetingWidget extends StatelessWidget {
         disableDialIn: "true",
         disableDrive: "true",
         disableInvite: "true",
-        disableShare: "true"
+        disableShare: "true",
+        noAudio: "false",
+        noDisconnectAudio: "false"
     );
+  }
+
+  bool _isMeetingEnded(String status) {
+    var result = false;
+
+    if (Platform.isAndroid)
+      result = status == "MEETING_STATUS_DISCONNECTING" || status == "MEETING_STATUS_FAILED";
+    else
+      result = status == "MEETING_STATUS_IDLE";
+
+    return result;
   }
 
   @override
@@ -47,10 +65,10 @@ class MeetingWidget extends StatelessWidget {
             if(results[0] == 0) {
 
               controller.zoomStatusEvents.listen((status) {
-                print("Status event: " + status[0] + " - " + status[1]);
-                if (status[0] == "MEETING_STATUS_IDLE" ||
-                    status[0] == "MEETING_STATUS_FAILED") {
-                  Navigator.of(context).pop();
+                print("Meeting Status Stream: " + status[0] + " - " + status[1]);
+                if (_isMeetingEnded(status[0])) {
+                  Navigator.pop(context);
+                  timer?.cancel();
                 }
               });
 
@@ -59,10 +77,13 @@ class MeetingWidget extends StatelessWidget {
               controller.joinMeeting(this.meetingOptions)
                   .then((joinMeetingResult) {
 
-                controller.meetingStatus(this.meetingOptions.meetingId)
-                    .then((status) {
-                  print("Meeting Status: " + status[0] + " - " + status[1]);
+                timer = Timer.periodic(new Duration(seconds: 2), (timer) {
+                  controller.meetingStatus(this.meetingOptions.meetingId)
+                      .then((status) {
+                    print("Meeting Status Polling: " + status[0] + " - " + status[1]);
+                  });
                 });
+
               });
             }
 

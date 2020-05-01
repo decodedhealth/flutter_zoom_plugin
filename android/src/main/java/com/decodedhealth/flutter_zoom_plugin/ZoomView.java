@@ -83,6 +83,12 @@ public class ZoomView  implements PlatformView,
         zoomSDK.initialize(
                 context,
                 new ZoomSDKInitializeListener() {
+
+                    @Override
+                    public void onZoomAuthIdentityExpired() {
+
+                    }
+
                     @Override
                     public void onZoomSDKInitializeResult(int errorCode, int internalErrorCode) {
                         List<Integer> response = Arrays.asList(errorCode, internalErrorCode);
@@ -121,6 +127,8 @@ public class ZoomView  implements PlatformView,
         opts.no_share = parseBoolean(options, "disableShare", false);
         opts.no_driving_mode = parseBoolean(options, "disableDrive", false);
         opts.no_dial_in_via_phone = parseBoolean(options, "disableDialIn", false);
+        opts.no_disconnect_audio = parseBoolean(options, "noDisconnectAudio", false);
+        opts.no_audio = parseBoolean(options, "noAudio", false);
 
         JoinMeetingParams params = new JoinMeetingParams();
 
@@ -162,6 +170,10 @@ public class ZoomView  implements PlatformView,
     @Override
     public void dispose() {}
 
+    @Override
+    public void onZoomAuthIdentityExpired() {
+
+    }
 
     @Override
     public void onZoomSDKLoginResult(long result) {
