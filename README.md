@@ -58,13 +58,13 @@ If you want to use the iOS Simulator to test your app, you will need to ensure y
 
 To use the Dev Zoom SDK, run the following
 ```shell script
-flutter pub run bin/unzip_zoom_sdk dev
+flutter pub run flutter_zoom_plugin:unzip_zoom_sdk dev
 ```
     
 To switch back to the normal Zoom SDK, simply run
 
 ```shell script
-flutter pub run bin/unzip_zoom_sdk
+flutter pub run flutter_zoom_plugin:unzip_zoom_sdk
 ```
 
 ### Android
