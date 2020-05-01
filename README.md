@@ -75,6 +75,8 @@ Change the minimum Android sdk version to at the minimum 21 in your `android/app
 minSdkVersion 21
 ```
 
+Add the zoom proguard content to your android project: https://github.com/zoom/zoom-sdk-android/blob/master/proguard.cfg
+
 ## Example
 
 ```dart
