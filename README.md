@@ -54,19 +54,17 @@ Or in text format add the key:
 
 **NOTE for testing on the iOS simulator**
 
-If you want to test the iOS Simulator you will need to ensure you have the iOS dev sdk as a dependency. To do this you will need to
-run the following command.
+If you want to use the iOS Simulator to test your app, you will need to ensure you have the iOS Dev Zoom SDK as a dependency. 
 
-Steps to use the master_dev.
-
-1. Run the following
-    ```shell script
-    flutter pub run bin/unzip_zoom_sdk dev
-    ```
-To switch back simply run
-
+To use the Dev Zoom SDK, run the following
 ```shell script
 flutter pub run bin/unzip_zoom_sdk dev
+```
+    
+To switch back to the normal Zoom SDK, simply run
+
+```shell script
+flutter pub run bin/unzip_zoom_sdk
 ```
 
 ### Android
@@ -109,6 +107,17 @@ class MeetingWidget extends StatelessWidget {
     );
   }
 
+  bool _isMeetingEnded(String status) {
+    var result = false;
+
+    if (Platform.isAndroid)
+      result = status == "MEETING_STATUS_DISCONNECTING" || status == "MEETING_STATUS_FAILED";
+    else
+      result = status == "MEETING_STATUS_IDLE";
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,9 +143,8 @@ class MeetingWidget extends StatelessWidget {
 
                 print("Meeting Status Stream: " + status[0] + " - " + status[1]);
 
-                if (status[0] == "MEETING_STATUS_IDLE" ||
-                    status[0] == "MEETING_STATUS_FAILED") {
-                  Navigator.of(context).pop();
+                if (_isMeetingEnded(status[0])) {
+                  Navigator.pop(context);
                   timer?.cancel();
                 }
               });

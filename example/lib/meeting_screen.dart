@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter_zoom_plugin/zoom_view.dart';
 import 'package:flutter_zoom_plugin/zoom_options.dart';
@@ -31,6 +32,17 @@ class MeetingWidget extends StatelessWidget {
     );
   }
 
+  bool _isMeetingEnded(String status) {
+    var result = false;
+
+    if (Platform.isAndroid)
+      result = status == "MEETING_STATUS_DISCONNECTING" || status == "MEETING_STATUS_FAILED";
+    else
+      result = status == "MEETING_STATUS_IDLE";
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Use the Todo to create the UI.
@@ -54,9 +66,8 @@ class MeetingWidget extends StatelessWidget {
 
               controller.zoomStatusEvents.listen((status) {
                 print("Meeting Status Stream: " + status[0] + " - " + status[1]);
-                if (status[0] == "MEETING_STATUS_IDLE" ||
-                    status[0] == "MEETING_STATUS_FAILED") {
-                  Navigator.of(context).pop();
+                if (_isMeetingEnded(status[0])) {
+                  Navigator.pop(context);
                   timer?.cancel();
                 }
               });
