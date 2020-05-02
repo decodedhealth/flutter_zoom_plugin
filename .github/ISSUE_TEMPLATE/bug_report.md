@@ -1,14 +1,12 @@
-<!--
-*****************************************************************
-*
-* WARNING:  DO NOT IGNORE THIS TEMPLATE
-*
-*****************************************************************
--->
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
 
-<!--
-  Provide a general summary of the issue in the Title above
--->
+---
+
 ## Your Environment
 * Plugin version:
 * Platform: iOS or Android
