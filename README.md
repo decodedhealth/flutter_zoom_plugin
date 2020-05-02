@@ -203,7 +203,3 @@ For Android:
 - `MEETING_STATUS_IN_WAITING_ROOM`
 - `MEETING_STATUS_RECONNECTING`
 - `MEETING_STATUS_WAITINGFORHOST`
-
-# Report Bugs
-
-When reporting a bug please use the template: https://github.com/decodedhealth/flutter_zoom_plugin/blob/master/.github/ISSUE_TEMPLATE/BUG.md
