@@ -23,7 +23,7 @@ Use the git tags for deployments as milestones as the master branch is considere
   flutter_zoom_plugin:
       git:
         url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-        ref: 0.0.5
+        ref: 0.0.7
 ```
 
 Please use `master` for Apple app store build deployments. 
