@@ -75,6 +75,8 @@ Change the minimum Android sdk version to at the minimum 21 in your `android/app
 minSdkVersion 21
 ```
 
+Add the zoom proguard content to your android project: https://github.com/zoom/zoom-sdk-android/blob/master/proguard.cfg
+
 ## Example
 
 ```dart
@@ -201,4 +203,3 @@ For Android:
 - `MEETING_STATUS_IN_WAITING_ROOM`
 - `MEETING_STATUS_RECONNECTING`
 - `MEETING_STATUS_WAITINGFORHOST`
-
