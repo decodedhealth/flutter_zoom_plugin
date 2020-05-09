@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item type="attr" name="colorPrimary">@color/zm2_abbr_avatar_bg_5</item>
-    <color name="zm2_abbr_avatar_bg_5">#4FD1E2</color>
-</resources>
