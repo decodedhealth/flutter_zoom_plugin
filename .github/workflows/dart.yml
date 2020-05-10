@@ -10,27 +10,17 @@ on:
     - master
 
 jobs:
-  build-android:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-
-    - uses: subosito/flutter-action@v1.2.0
-      with:
-        channel: 'stable'
-    
-    - name: Install dependencies
-      run: flutter pub get
-      
-    - name: Run tests
-      run: flutter test
-      
-    - name: Test build Android example app
-      run: flutter build apk -t lib/main.dart
-      working-directory: ./example
-
-  build-ios:
-    runs-on: macos-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        package: [apk, ios]
+        exclude:
+          - os: ubuntu-latest
+            package: ios
+          - os: macos-latest
+            package: apk
     steps:
       - uses: actions/checkout@v2
 
@@ -41,6 +31,9 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Test build ios example app
-        run: flutter build ios -t lib/main.dart --no-codesign
+      - name: Run tests
+        run: flutter test
+
+      - name: Test build ${{ matrix.package }} package for example app
+        run: flutter build ${{ matrix.package }} -t lib/main.dart
         working-directory: ./example
