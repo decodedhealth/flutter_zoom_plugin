@@ -4,22 +4,20 @@ on:
   push:
     branches: 
     - master
+    - feature/github-action
   pull_request:
     branches: 
     - master
 
 jobs:
-  build:
-
+  build-android:
     runs-on: ubuntu-latest
-
     container:
       image:  google/dart:latest
-
     steps:
     - uses: actions/checkout@v2
-      
-    - uses: subosito/flutter-action@v1
+
+    - uses: subosito/flutter-action@v1.2.0
       with:
         channel: 'stable'
     
@@ -32,7 +30,21 @@ jobs:
     - name: Test build Android example app
       run: flutter build apk -t lib/main.dart
       working-directory: ./example
-      
-    - name: Test build ios example app
-      run: flutter build ios -t lib/main.dart
-      working-directory: ./example
+
+  build-ios:
+    runs-on: macos-latest
+    container:
+      image:  google/dart:latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: subosito/flutter-action@v1.2.0
+        with:
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Test build ios example app
+        run: flutter build ios -t lib/main.dart --no-codesign
+        working-directory: ./example
