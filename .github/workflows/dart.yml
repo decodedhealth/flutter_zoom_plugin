@@ -37,9 +37,9 @@ jobs:
       - name: Test build ${{ matrix.package }} package for example app
         run: flutter build ${{ matrix.package }} -t lib/main.dart
         working-directory: ./example
-        if: matrix.package == apk
+        if: matrix.package == 'apk'
 
       - name: Test build ${{ matrix.package }} package for example app
         run: flutter build ${{ matrix.package }} -t lib/main.dart --no-codesign
         working-directory: ./example
-        if: matrix.package == ios
+        if: matrix.package == 'ios'
