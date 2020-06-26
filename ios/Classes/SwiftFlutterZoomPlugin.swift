@@ -205,6 +205,8 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
             self.initZoom(call: call, result: result)
         case "join":
             self.joinMeeting(call: call, result: result)
+        case "start":
+            self.startMeeting(call: call, result: result)
         case "meeting_status":
             self.meetingStatus(call: call, result: result)
         default:
@@ -273,6 +275,44 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
             
             if let response = response {
                 print("Got response from join: \(response)")
+            }
+            result(true)
+        } else {
+            result(false)
+        }
+    }
+
+    public func startMeeting(call: FlutterMethodCall, result: FlutterResult) {
+        
+        let meetingService = MobileRTC.shared().getMeetingService()
+        let meetingSettings = MobileRTC.shared().getMeetingSettings()
+        
+        if meetingService != nil {
+            
+            let arguments = call.arguments as! Dictionary<String, String?>
+            
+            meetingSettings?.disableDriveMode(parseBoolean(data: arguments["disableDrive"]!, defaultValue: false))
+            meetingSettings?.disableCall(in: parseBoolean(data: arguments["disableDialIn"]!, defaultValue: false))
+            meetingSettings?.setAutoConnectInternetAudio(parseBoolean(data: arguments["noDisconnectAudio"]!, defaultValue: false))
+            meetingSettings?.setMuteAudioWhenJoinMeeting(parseBoolean(data: arguments["noAudio"]!, defaultValue: false))
+            meetingSettings?.meetingShareHidden = parseBoolean(data: arguments["disableShare"]!, defaultValue: false)
+            meetingSettings?.meetingInviteHidden = parseBoolean(data: arguments["disableDrive"]!, defaultValue: false)
+
+            let user: MobileRTCMeetingStartParam4WithoutLoginUser = MobileRTCMeetingStartParam4WithoutLoginUser.init()
+            
+            user.userType = MobileRTCUserType_APIUser
+            user.meetingNumber = arguments["meetingId"]!!
+            user.userName = arguments["displayName"]!!
+            user.userToken = arguments["zoomToken"]!!
+            user.userID = arguments["userId"]!!
+            user.zak = arguments["zoomAccessToken"]!!
+
+            let param: MobileRTCMeetingStartParam = user
+            
+            let response = meetingService?.startMeeting(with: param)
+            
+            if let response = response {
+                print("Got response from start: \(response)")
             }
             result(true)
         } else {
