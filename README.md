@@ -182,6 +182,16 @@ You need to obtain the User Token and Zoom Access Token (ZAK) in order to start 
 
 Documentation to obtain User Token and ZAK: https://marketplace.zoom.us/docs/sdk/native-sdks/android/mastering-zoom-sdk/start-join-meeting/api-user/authentication
 
+More info about the User Token and Zoom Access Token: https://marketplace.zoom.us/docs/sdk/native-sdks/credentials
+
+In order to test it properly it is recommended to:
+
+1) Create a meeting (with a host of course), get the Meeting ID (can be a 10 or 11-digit number)
+2) Use the Zoom API to obtain the tokens from the Host
+3) Try using the Meetig ID and tokens on the plugin
+
+You will see that the SDK reconginzes the user as the Host
+
 ## Example Start Meeting
 
 ```dart
@@ -201,7 +211,7 @@ class StartMeetingWidget extends StatelessWidget {
     this.meetingOptions = new ZoomMeetingOptions(
         userId: '<zoom_user_id>',
         displayName: 'Example display Name',
-        meetingId: meetingId,
+        meetingId: meetingId, // 
         zoomAccessToken: "<User zak>", // Replace it with the one obtained from the zoom api
         zoomToken: "<user_token>", // Replace it with the one obtained from the zoom api
         disableDialIn: "true",
