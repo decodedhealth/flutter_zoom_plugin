@@ -15,6 +15,8 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 import us.zoom.sdk.JoinMeetingOptions;
 import us.zoom.sdk.JoinMeetingParams;
+import us.zoom.sdk.StartMeetingParamsWithoutLogin;
+import us.zoom.sdk.StartMeetingOptions;
 import us.zoom.sdk.MeetingService;
 import us.zoom.sdk.MeetingStatus;
 import us.zoom.sdk.ZoomError;
@@ -55,6 +57,9 @@ public class ZoomView  implements PlatformView,
             case "join":
                 joinMeeting(methodCall, result);
                 break;
+            case "start":
+                startMeeting(methodCall, result);
+                break;
             case "meeting_status":
                 meetingStatus(result);
                 break;
@@ -77,6 +82,7 @@ public class ZoomView  implements PlatformView,
         }
 
         ZoomSDKInitParams initParams = new ZoomSDKInitParams();
+        initParams.jwtToken = options.get("sdkToken");
         initParams.appKey = options.get("appKey");
         initParams.appSecret = options.get("appSecret");
         initParams.domain = options.get("domain");
@@ -137,6 +143,42 @@ public class ZoomView  implements PlatformView,
         params.password = options.get("meetingPassword");
 
         meetingService.joinMeetingWithParams(context, params, opts);
+
+        result.success(true);
+    }
+
+    private void startMeeting(MethodCall methodCall, MethodChannel.Result result) {
+
+        Map<String, String> options = methodCall.arguments();
+
+        ZoomSDK zoomSDK = ZoomSDK.getInstance();
+
+        if(!zoomSDK.isInitialized()) {
+            System.out.println("Not initialized!!!!!!");
+            result.success(false);
+            return;
+        }
+
+        final MeetingService meetingService = zoomSDK.getMeetingService();
+
+        StartMeetingOptions opts = new StartMeetingOptions();
+        opts.no_invite = parseBoolean(options, "disableInvite", false);
+        opts.no_share = parseBoolean(options, "disableShare", false);
+        opts.no_driving_mode = parseBoolean(options, "disableDrive", false);
+        opts.no_dial_in_via_phone = parseBoolean(options, "disableDialIn", false);
+        opts.no_disconnect_audio = parseBoolean(options, "noDisconnectAudio", false);
+        opts.no_audio = parseBoolean(options, "noAudio", false);
+
+        StartMeetingParamsWithoutLogin params = new StartMeetingParamsWithoutLogin();
+
+		params.userId = options.get("userId");
+        params.displayName = options.get("displayName");
+        params.meetingNo = options.get("meetingId");
+		params.userType = MeetingService.USER_TYPE_API_USER;
+		params.zoomToken = options.get("zoomToken");
+		params.zoomAccessToken = options.get("zoomAccessToken");
+		
+        meetingService.startMeetingWithParams(context, params, opts);
 
         result.success(true);
     }

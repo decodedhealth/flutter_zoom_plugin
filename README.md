@@ -77,7 +77,7 @@ minSdkVersion 21
 
 Add the zoom proguard content to your android project: https://github.com/zoom/zoom-sdk-android/blob/master/proguard.cfg
 
-## Example
+## Example Join Meeting
 
 ```dart
 class MeetingWidget extends StatelessWidget {
@@ -173,6 +173,121 @@ class MeetingWidget extends StatelessWidget {
       ),
     );
   }
+}
+```
+
+### Start a Meeting
+
+You need to obtain the User Token and Zoom Access Token (ZAK) in order to start meetings for a user. ZAKs are unique authentication tokens required to host a meeting on behalf of another user.
+
+Documentation to obtain User Token and ZAK: https://marketplace.zoom.us/docs/sdk/native-sdks/android/mastering-zoom-sdk/start-join-meeting/api-user/authentication
+
+More info about the User Token and Zoom Access Token: https://marketplace.zoom.us/docs/sdk/native-sdks/credentials
+
+In order to test it properly it is recommended to:
+
+1) Create a meeting (with a host of course), get the Meeting ID (can be a 10 or 11-digit number)
+2) Use the Zoom API to obtain the tokens from the Host
+3) Try using the Meetig ID and tokens on the plugin
+
+You will see that the SDK reconginzes the user as the Host
+
+## Example Start Meeting
+
+```dart
+class StartMeetingWidget extends StatelessWidget {
+
+  ZoomOptions zoomOptions;
+  ZoomMeetingOptions meetingOptions;
+
+  Timer timer;
+
+  StartMeetingWidget({Key key, meetingId}) : super(key: key) {
+    this.zoomOptions = new ZoomOptions(
+      domain: "zoom.us",
+      appKey: "appKey",
+      appSecret: "appSecret",
+    );
+    this.meetingOptions = new ZoomMeetingOptions(
+        userId: '<zoom_user_id>',
+        displayName: 'Example display Name',
+        meetingId: meetingId, // 
+        zoomAccessToken: "<User zak>", // Replace it with the one obtained from the zoom api
+        zoomToken: "<user_token>", // Replace it with the one obtained from the zoom api
+        disableDialIn: "true",
+        disableDrive: "true",
+        disableInvite: "true",
+        disableShare: "true",
+        noAudio: "false",
+        noDisconnectAudio: "false"
+    );
+  }
+
+  bool _isMeetingEnded(String status) {
+    var result = false;
+
+    if (Platform.isAndroid)
+      result = status == "MEETING_STATUS_DISCONNECTING" || status == "MEETING_STATUS_FAILED";
+    else
+      result = status == "MEETING_STATUS_IDLE";
+
+    return result;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Use the Todo to create the UI.
+    return Scaffold(
+      appBar: AppBar(
+          title: Text('Loading meeting '),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: ZoomView(onViewCreated: (controller) {
+
+          print("Created the view");
+
+          controller.initZoom(this.zoomOptions)
+              .then((results) {
+
+            print("initialised");
+            print(results);
+
+            if(results[0] == 0) {
+
+              controller.zoomStatusEvents.listen((status) {
+                print("Meeting Status Stream: " + status[0] + " - " + status[1]);
+                if (_isMeetingEnded(status[0])) {
+                  Navigator.pop(context);
+                  timer?.cancel();
+                }
+              });
+
+              print("listen on event channel");
+
+              controller.startMeeting(this.meetingOptions)
+                  .then((joinMeetingResult) {
+
+                timer = Timer.periodic(new Duration(seconds: 2), (timer) {
+                  controller.meetingStatus(this.meetingOptions.meetingId)
+                      .then((status) {
+                    print("Meeting Status Polling: " + status[0] + " - " + status[1]);
+                  });
+                });
+
+              });
+            }
+
+          }).catchError((error) {
+
+            print("Error");
+            print(error);
+          });
+        })
+      ),
+    );
+  }
+
 }
 ```
 
