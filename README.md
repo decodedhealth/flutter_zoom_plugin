@@ -174,8 +174,9 @@ class MeetingWidget extends StatelessWidget {
     // Setting up the Zoom credentials
     this.zoomOptions = new ZoomOptions(
       domain: "zoom.us",
-      appKey: "appKey", // Replace with with key got from the Zoom Marketplace
-      appSecret: "appSecret", // Replace with with secret got from the Zoom Marketplace
+      appKey: "appKey",//@Deprecated 
+      appSecret: "appSecret",//@Deprecated
+      jwtToken: "jwtToken",// Replace the jwtToken
     );
 
     // Setting Zoom meeting options (default to false if not set)
