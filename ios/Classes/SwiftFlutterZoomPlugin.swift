@@ -228,8 +228,9 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
         
         let auth = MobileRTC.shared().getAuthService()
         auth?.delegate = self.authenticationDelegate.onAuth(result)
-        auth?.clientKey = arguments["appKey"]!
-        auth?.clientSecret = arguments["appSecret"]!
+        auth?.jwtToken = arguments["jwtToken"]
+//        auth?.clientKey = arguments["appKey"]!
+//        auth?.clientSecret = arguments["appSecret"]!
         auth?.sdkAuth()
     }
     
