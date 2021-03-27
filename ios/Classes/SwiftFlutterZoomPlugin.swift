@@ -397,7 +397,7 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
     private func getStateMessage(_ state: MobileRTCMeetingState?) -> [String] {
         
         var message: [String]
-        
+        print("getStateMessage meetingState: \(state?.rawValue ?? 9999)" )
         switch state {
         case  .idle:
             message = ["MEETING_STATUS_IDLE", "No meeting is running"]
@@ -414,8 +414,17 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
         case .webinarDePromote:
             message = ["MEETING_STATUS_WEBINAR_DEPROMOTE", "Demote the attendees from the panelist"]
             break
+        case .disconnecting:
+            message = ["MEETING_STATUS_DISCONNECTING", "Disconnect the meeting server, leave meeting status"]
+            break;
+        case .ended:
+            message = ["MEETING_STATUS_ENDED", "Meeting ends"]
+            break;
+        case .failed:
+            message = ["MEETING_STATUS_FAILED", "Failed to connect the meeting server"]
+            break;
         default:
-            message = ["MEETING_STATUS_UNKNOWN", "Unknown error"]
+            message = ["MEETING_STATUS_UNKNOWN", "\(state?.rawValue ?? 9999)"]
         }
         
         return message
