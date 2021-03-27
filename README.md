@@ -30,7 +30,7 @@ First, add `flutter_zoom_plugin` as a [dependency in your pubspec.yaml file](htt
   flutter_zoom_plugin:
       git:
         url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-        ref: 149b006975d56b23fe4885a80a978dca5ab816f2
+        ref: bfb901e0d395e44f5bf1b55a57ac2e756884d586
 ```
 
 
