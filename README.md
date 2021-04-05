@@ -25,15 +25,23 @@ iOS: https://github.com/zoom/zoom-sdk-ios/releases/tag/v5.2.42037.1112
 
 First, add `flutter_zoom_plugin` as a [dependency in your pubspec.yaml file](https://flutter.io/using-packages/).
 
+Use the git tags for deployments as milestones as the master branch is considered active development.
 
 ```yaml
   flutter_zoom_plugin:
       git:
         url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-        ref: bfb901e0d395e44f5bf1b55a57ac2e756884d586
+        ref: 0.0.9
 ```
 
+Please use `master` for Apple app store build deployments. 
 
+```yaml
+  flutter_zoom_plugin:
+      git:
+        url: git://github.com/decodedhealth/flutter_zoom_plugin.git
+        ref: master
+```
 
 ### iOS
 
