@@ -16,14 +16,12 @@ class MeetingWidget extends StatelessWidget {
   MeetingWidget({Key key, meetingId, meetingPassword}) : super(key: key) {
     this.zoomOptions = new ZoomOptions(
       domain: "zoom.us",
-      appKey: "appKey",//@Deprecated 
-      appSecret: "appSecret",//@Deprecated
-      jwtToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBLZXkiOiJLN0N3R09DOUJhbG5IU2lxVm1kcGhUZUw4aE9RRUhZUGpjUFYiLCJpYXQiOjE2MTU1MTA3OTksImV4cCI6MTY0NzAxNzk5OSwidG9rZW5FeHAiOjE2NDcwMTc5OTl9.qxNdVZpK5PwDDbinyU4A-pYC1eBmTykayZFRNnuiUu0",
+      jwtToken: "sdk_jwtToken",
     );
     this.meetingOptions = new ZoomMeetingOptions(
         userId: 'example',
-        meetingId: "92133699727",
-        meetingPassword: "111",
+        meetingId: meetingId,
+        meetingPassword: meetingPassword,
         disableDialIn: "true",
         disableDrive: "true",
         disableInvite: "true",
