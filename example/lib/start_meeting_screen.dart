@@ -35,14 +35,7 @@ class StartMeetingWidget extends StatelessWidget {
   }
 
   bool _isMeetingEnded(String status) {
-    var result = false;
-
-    if (Platform.isAndroid)
-      result = status == "MEETING_STATUS_DISCONNECTING" || status == "MEETING_STATUS_FAILED";
-    else
-      result = status == "MEETING_STATUS_IDLE";
-
-    return result;
+    return status == "MEETING_STATUS_ENDED";
   }
 
   @override
