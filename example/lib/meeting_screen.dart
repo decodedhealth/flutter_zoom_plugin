@@ -16,7 +16,8 @@ class MeetingWidget extends StatelessWidget {
   MeetingWidget({Key key, meetingId, meetingPassword}) : super(key: key) {
     this.zoomOptions = new ZoomOptions(
       domain: "zoom.us",
-      jwtToken: "sdk_jwtToken",
+     jwtToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBLZXkiOiJ6OGphNWtDUldJUDBYQVJpUzU5MjJBczN3R3VXbGdMd0VwTmciLCJpYXQiOjE2MTc1OTE1NzEsImV4cCI6MTkzMzA5NTU3MSwidG9rZW5FeHAiOjE5MzMwOTU1NzF9.a4xWGF5DVsxqm2kbn2-npzQbJ5_GBvkO30VEnzyUuqk",
+ 
     );
     this.meetingOptions = new ZoomMeetingOptions(
         userId: 'example',
@@ -32,6 +33,8 @@ class MeetingWidget extends StatelessWidget {
   }
 
   bool _isMeetingEnded(String status) {
+    if (Platform.isAndroid)
+        return status == "MEETING_STATUS_DISCONNECTING" || status == "MEETING_STATUS_FAILED";
     return status == "MEETING_STATUS_ENDED";
   }
 
