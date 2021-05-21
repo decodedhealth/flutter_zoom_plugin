@@ -2,7 +2,7 @@
 //  MobileRTCMeetingService+InMeeting.h
 //  MobileRTC
 //
-//  Created by Robust Hu on 2017/2/27.
+//  Created by Zoom Video Communications on 2017/2/27.
 //  Copyright © 2019年 Zoom Video Communications, Inc. All rights reserved.
 //
 
@@ -258,5 +258,33 @@
  @warning The method only for Zoom UI
  */
 - (BOOL)backZoomUIMeetingFromMinimizeMeeting;
+
+/*!
+@brief Query if the meeting is allow participants to rename themselves.
+@warning Only meeting host/co-host can call the function.
+@warning Only in-meeting can call the function.
+*/
+- (BOOL)isParticipantsRenameAllowed;
+
+/*!
+@brief Set the meeting is allow participants to rename themselves.
+@warning Only meeting host/co-host can call the function.
+@warning Only in-meeting can call the function.
+*/
+- (void)allowParticipantsToRename:(BOOL)allow;
+
+/*!
+@brief Query if the meeting is allow participants to unmute themselves.
+@warning Only meeting host/co-host can call the function.
+@warning Only in-meeting can call the function.
+*/
+- (BOOL)isParticipantsUnmuteSelfAllowed;
+
+/*!
+@brief Query if the meeting is allow participants to unmute themselves.
+@warning Only meeting host/co-host can call the function.
+@warning Only in-meeting can call the function.
+*/
+- (void)allowParticipantsToUnmuteSelf:(BOOL)allow;
 
 @end

@@ -2,7 +2,7 @@
 //  MobileRTCMeetingUserInfo.h
 //  MobileRTC
 //
-//  Created by Robust Hu on 2017/2/27.
+//  Created by Zoom Video Communications on 2017/2/27.
 //  Copyright © 2019年 Zoom Video Communications, Inc. All rights reserved.
 //
 
@@ -31,14 +31,14 @@
 /*!
  @brief An Enum for Audio Type.
  */
-typedef enum {
+typedef NS_ENUM(NSUInteger, MobileRTCAudioType) {
     ///VoIP
     MobileRTCAudioType_VoIP   = 0,
     ///Telephony
     MobileRTCAudioType_Telephony,
     ///None
     MobileRTCAudioType_None,
-}MobileRTCAudioType;
+};
 /*!
  @class MobileRTCVideoStatus
  @brief The object of the audio status of the current user in the meeting. 
@@ -59,7 +59,7 @@ typedef enum {
 
 @end
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, MobileRTCFeedbackType) {
 	/*!
 	 @brief There is no feedback from user.
 	 */
@@ -108,7 +108,7 @@ typedef enum {
 	 @brief Other expression.
 	 */
     MobileRTCFeedbackType_Emoji,
-}MobileRTCFeedbackType;
+};
 
 /*!
  @brief The information of the current user in the meeting.
@@ -118,6 +118,10 @@ typedef enum {
  @brief The ID of user.
  */
 @property (nonatomic, assign) NSUInteger       userID;
+/*!
+ @brief The ID of participantID.
+ */
+@property (nonatomic, retain) NSString* _Nullable       participantID;
 /*!
  @brief The screen name of user.
  */

@@ -46,6 +46,8 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+            shrinkResources false 
+            minifyEnabled false
         }
     }
 }
@@ -63,6 +65,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
-    compileOnly fileTree(include: '*.aar', dir: '../../../android/libs/commonlib/')
-    compileOnly fileTree(include: '*.aar', dir: '../../../android/libs/mobilertc/')
+    implementation fileTree(include: '*.aar', dir: '../../../android/libs/commonlib/')
+    implementation fileTree(include: '*.aar', dir: '../../../android/libs/mobilertc/')
 }
