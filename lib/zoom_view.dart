@@ -9,10 +9,10 @@ typedef void ZoomViewCreatedCallback(ZoomViewController controller);
 
 class ZoomView extends StatefulWidget {
   const ZoomView({
-    Key key,
-    this.zoomOptions,
-    this.meetingOptions,
-    this.onViewCreated,
+    Key? key,
+    required this.zoomOptions,
+    required this.meetingOptions,
+    required this.onViewCreated,
   }) : super(key: key);
 
   final ZoomViewCreatedCallback onViewCreated;
@@ -62,10 +62,10 @@ class ZoomViewController {
   final MethodChannel _methodChannel;
   final EventChannel _zoomStatusEventChannel;
 
-  Future<List> initZoom(ZoomOptions options) async {
+  Future<dynamic> initZoom(ZoomOptions options) async {
     assert(options != null);
 
-    var optionMap = new Map<String, String>();
+    var optionMap = new Map<String, String?>();
     optionMap.putIfAbsent("appKey", () => options.appKey);
     optionMap.putIfAbsent("appSecret", () => options.appSecret);
     optionMap.putIfAbsent("domain", () => options.domain);
@@ -73,9 +73,9 @@ class ZoomViewController {
     return _methodChannel.invokeMethod('init', optionMap);
   }
 
-  Future<bool> startMeeting(ZoomMeetingOptions options) async {
+  Future<dynamic> startMeeting(ZoomMeetingOptions options) async {
     assert(options != null);
-    var optionMap = new Map<String, String>();
+    var optionMap = new Map<String, String?>();
     optionMap.putIfAbsent("userId", () => options.userId);
     optionMap.putIfAbsent("displayName", () => options.displayName);
     optionMap.putIfAbsent("meetingId", () => options.meetingId);
@@ -92,9 +92,9 @@ class ZoomViewController {
     return _methodChannel.invokeMethod('start', optionMap);
   }
 
-  Future<bool> joinMeeting(ZoomMeetingOptions options) async {
+  Future<dynamic> joinMeeting(ZoomMeetingOptions options) async {
     assert(options != null);
-    var optionMap = new Map<String, String>();
+    var optionMap = new Map<String, String?>();
     optionMap.putIfAbsent("userId", () => options.userId);
     optionMap.putIfAbsent("meetingId", () => options.meetingId);
     optionMap.putIfAbsent("meetingPassword", () => options.meetingPassword);
@@ -108,7 +108,7 @@ class ZoomViewController {
     return _methodChannel.invokeMethod('join', optionMap);
   }
 
-  Future<List> meetingStatus(String meetingId) async {
+  Future<dynamic> meetingStatus(String meetingId) async {
     assert(meetingId != null);
 
     var optionMap = new Map<String, String>();

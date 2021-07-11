@@ -4,16 +4,19 @@ version: 0.0.7
 homepage: https://decodedhealth.com
 issue_tracker: https://github.com/decodedhealth/flutter_zoom_plugin/issues
 environment:
-  sdk: ">=2.1.0 <3.0.0"
-  flutter: ">=1.12.0 <2.0.0"
+  sdk: '>=2.12.0 <3.0.0'
+  flutter: '>=1.12.0 <2.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  archive: ^3.1.2
+  args: ^2.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test: ^1.16.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

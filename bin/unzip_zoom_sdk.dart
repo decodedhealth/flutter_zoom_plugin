@@ -4,10 +4,13 @@ import 'package:archive/archive.dart';
 import 'package:args/args.dart';
 
 void main(List<String> args) {
+  var location = Platform.script
+      .toString()
+      .replaceFirst("file://", "")
+      .replaceFirst("/bin/unzip_zoom_sdk.dart", "");
 
-  var location = Platform.script.toString().replaceFirst("file://", "").replaceFirst("/bin/unzip_zoom_sdk.dart", "");
-
-  var filename = location + '/ios-sdk/MobileRTC${(args.length == 0) ? "" : "-dev"}.zip';
+  var filename =
+      location + '/ios-sdk/MobileRTC${(args.length == 0) ? "" : "-dev"}.zip';
 
   print('Decompressing ' + filename);
 
