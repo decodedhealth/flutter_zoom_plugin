@@ -1,6 +1,6 @@
 name: flutter_zoom_plugin
 description: A flutter plugin for the Zoom SDK.
-version: 0.0.7
+version: 0.0.9
 homepage: https://decodedhealth.com
 issue_tracker: https://github.com/decodedhealth/flutter_zoom_plugin/issues
 environment:
@@ -14,7 +14,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  archive: ^3.1.2
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 

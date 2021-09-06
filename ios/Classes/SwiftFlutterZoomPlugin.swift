@@ -40,7 +40,7 @@ public class AuthenticationDelegate: NSObject, MobileRTCAuthDelegate {
     
     public func onMobileRTCAuthReturn(_ returnValue: MobileRTCAuthError) {
 
-        if returnValue == MobileRTCAuthError_Success {
+        if returnValue == .success {
             self.result?([0, 0])
         } else {
             self.result?([1, 0])
@@ -228,8 +228,7 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
         
         let auth = MobileRTC.shared().getAuthService()
         auth?.delegate = self.authenticationDelegate.onAuth(result)
-        auth?.clientKey = arguments["appKey"]!
-        auth?.clientSecret = arguments["appSecret"]!
+        auth?.jwtToken = arguments["jwtToken"]
         auth?.sdkAuth()
     }
     
@@ -300,10 +299,10 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
 
             let user: MobileRTCMeetingStartParam4WithoutLoginUser = MobileRTCMeetingStartParam4WithoutLoginUser.init()
             
-            user.userType = MobileRTCUserType_APIUser
+            user.userType = .apiUser
             user.meetingNumber = arguments["meetingId"]!!
             user.userName = arguments["displayName"]!!
-            user.userToken = arguments["zoomToken"]!!
+           // user.userToken = arguments["zoomToken"]!!
             user.userID = arguments["userId"]!!
             user.zak = arguments["zoomAccessToken"]!!
 
@@ -396,25 +395,42 @@ public class ZoomView: NSObject, FlutterPlatformView, MobileRTCMeetingServiceDel
     private func getStateMessage(_ state: MobileRTCMeetingState?) -> [String] {
         
         var message: [String]
-        
         switch state {
-        case MobileRTCMeetingState_Idle:
+        case  .idle:
             message = ["MEETING_STATUS_IDLE", "No meeting is running"]
             break
-        case MobileRTCMeetingState_Connecting:
+        case .connecting:
             message = ["MEETING_STATUS_CONNECTING", "Connect to the meeting server"]
             break
-        case MobileRTCMeetingState_InMeeting:
+        case .inMeeting:
             message = ["MEETING_STATUS_INMEETING", "Meeting is ready and in process"]
             break
-        case MobileRTCMeetingState_WebinarPromote:
+        case .webinarPromote:
             message = ["MEETING_STATUS_WEBINAR_PROMOTE", "Upgrade the attendees to panelist in webinar"]
             break
-        case MobileRTCMeetingState_WebinarDePromote:
+        case .webinarDePromote:
             message = ["MEETING_STATUS_WEBINAR_DEPROMOTE", "Demote the attendees from the panelist"]
             break
+        case .disconnecting:
+            message = ["MEETING_STATUS_DISCONNECTING", "Disconnect the meeting server, leave meeting status"]
+            break;
+        case .ended:
+            message = ["MEETING_STATUS_ENDED", "Meeting ends"]
+            break;
+        case .failed:
+            message = ["MEETING_STATUS_FAILED", "Failed to connect the meeting server"]
+            break;
+        case .reconnecting:
+            message = ["MEETING_STATUS_RECONNECTING", "Reconnecting meeting server status"]
+            break;
+        case .waitingForHost:
+            message = ["MEETING_STATUS_WAITINGFORHOST", "Waiting for the host to start the meeting"]
+            break;
+        case .inWaitingRoom:
+            message = ["MEETING_STATUS_IN_WAITING_ROOM", "Participants who join the meeting before the start are in the waiting room"]
+            break;
         default:
-            message = ["MEETING_STATUS_UNKNOWN", "Unknown error"]
+            message = ["MEETING_STATUS_UNKNOWN", "\(state?.rawValue ?? 9999)"]
         }
         
         return message

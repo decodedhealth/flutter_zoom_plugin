@@ -16,14 +16,13 @@ class StartMeetingWidget extends StatelessWidget {
   StartMeetingWidget({Key key, meetingId}) : super(key: key) {
     this.zoomOptions = new ZoomOptions(
       domain: "zoom.us",
-      appKey: "appKey",
-      appSecret: "appSecret",
+      jwtToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBLZXkiOiJ6OGphNWtDUldJUDBYQVJpUzU5MjJBczN3R3VXbGdMd0VwTmciLCJpYXQiOjE2MTc1OTE1NzEsImV4cCI6MTkzMzA5NTU3MSwidG9rZW5FeHAiOjE5MzMwOTU1NzF9.a4xWGF5DVsxqm2kbn2-npzQbJ5_GBvkO30VEnzyUuqk",
     );
     this.meetingOptions = new ZoomMeetingOptions(
-        userId: '<zoom_user_id>',
+        userId: 'Y174389107@gmail.com',
         displayName: 'Example display Name',
         meetingId: meetingId,
-        zoomAccessToken: "<User zak>",
+        zoomAccessToken: "eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJCZTlpeDg0LVJyR0Q2VDF5Y21hNUVBIiwiaXNzIjoid2ViIiwic3R5IjoxMDAsIndjZCI6InVzMDUiLCJjbHQiOjAsInN0ayI6IktGRS1vSlJPUVVtNUVFZzRiRmJSSXhvMVNoRVBYT1R0YkpIbXo0R2Y5bHMuQmdZZ1ZWQndVWFpoZVUxd2NXRktUbFo2TTNZemJ6TnBWVFozYnpOSlRETXpiMFpBWmpOaE1UY3daVEpsTkRRM05qYzJZVE15TnpZMFpUWTVObUUxTWpNeE1qUXlZVFl5TURZMk9HTTJNVFUzTURZeE56ZzFNRFZsTVdVeE4yUmhNV0k1WmdBZ1VtbExRemcyUzFwRk1ISnBPR3RtVW1seFYxSnlWemxRV1VabmVIbFNTRmNBQkhWek1EVUFBQUY0b0FWZmNRQVNkUUFBQUEiLCJleHAiOjE2MTc1OTk2MDksImlhdCI6MTYxNzU5MjQwOSwiYWlkIjoiNGV5cGViaVRSZmFSang4dGx3dDFBUSIsImNpZCI6IiJ9.o26-wTAsF5O8tOBiIXZqnFQXbNvUfwewLYzdYW3_Cqo",
         zoomToken: "<user_token>",
         disableDialIn: "true",
         disableDrive: "true",
@@ -35,14 +34,9 @@ class StartMeetingWidget extends StatelessWidget {
   }
 
   bool _isMeetingEnded(String status) {
-    var result = false;
-
     if (Platform.isAndroid)
-      result = status == "MEETING_STATUS_DISCONNECTING" || status == "MEETING_STATUS_FAILED";
-    else
-      result = status == "MEETING_STATUS_IDLE";
-
-    return result;
+        return status == "MEETING_STATUS_DISCONNECTING" || status == "MEETING_STATUS_FAILED";
+    return status == "MEETING_STATUS_ENDED";
   }
 
   @override

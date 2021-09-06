@@ -1,3 +1,5 @@
+This project is not maintained anymore! Please go to https://github.com/driftboat/flutter_zoom 
+
 # Flutter Zoom Plugin
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -17,9 +19,9 @@ Feedback and Pull Requests are always welcome.
 
 ## Zoom SDK Versions
 
-Android: https://github.com/zoom/zoom-sdk-android/releases/tag/v4.6.21666.0429
+Android: https://github.com/zoom/zoom-sdk-android/releases/tag/v5.2.42043.1112
  
-iOS: https://github.com/zoom/zoom-sdk-ios/releases/tag/v4.6.21666.0428
+iOS: https://github.com/zoom/zoom-sdk-ios/releases/tag/v5.2.42037.1112
 
 ## Installation
 
@@ -31,7 +33,7 @@ Use the git tags for deployments as milestones as the master branch is considere
   flutter_zoom_plugin:
       git:
         url: git://github.com/decodedhealth/flutter_zoom_plugin.git
-        ref: 0.0.8
+        ref: 0.0.9
 ```
 
 Please use `master` for Apple app store build deployments. 
@@ -42,7 +44,6 @@ Please use `master` for Apple app store build deployments.
         url: git://github.com/decodedhealth/flutter_zoom_plugin.git
         ref: master
 ```
-
 
 ### iOS
 
@@ -58,6 +59,20 @@ Or in text format add the key:
 <string>Need to use the camera for call</string>
 <key>NSMicrophoneUsageDescription</key>
 <string>Need to use the microphone for call</string>
+```
+
+
+Diable BITCODE in the `ios/Podfile`:
+
+```
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    target.build_configurations.each do |config|
+      config.build_settings['ENABLE_BITCODE'] = 'NO'
+    end
+  end
+end
 ```
 
 **NOTE for testing on the iOS simulator**
@@ -96,15 +111,6 @@ There are 2 ways to obtains the Zoom meeting status
 
 The plugin emits the following Zoom meeting events:
 
-For iOS:
-- `MEETING_STATUS_IDLE`
-- `MEETING_STATUS_CONNECTING`
-- `MEETING_STATUS_INMEETING`
-- `MEETING_STATUS_WEBINAR_PROMOTE`
-- `MEETING_STATUS_WEBINAR_DEPROMOTE`
-- `MEETING_STATUS_UNKNOWN`
-
-For Android:
 - `MEETING_STATUS_IDLE`
 - `MEETING_STATUS_CONNECTING`
 - `MEETING_STATUS_INMEETING`
@@ -116,8 +122,39 @@ For Android:
 - `MEETING_STATUS_IN_WAITING_ROOM`
 - `MEETING_STATUS_RECONNECTING`
 - `MEETING_STATUS_WAITINGFORHOST`
+- `MEETING_STATUS_ENDED`
+
 
 ### Join Meeting
+
+
+- Create SDK App JWT Token
+  - https://marketplace.zoom.us/docs/sdk/native-sdks/android/mastering-zoom-sdk/sdk-initialization => Composing JWT for SDK Initialization
+  - Generate JWT Token from https://jwt.io/ for testing. 
+  
+    Get from your server for distribution. 
+    
+    You can get current timestamp from https://www.unixtimestamp.com/. 
+    
+    Enter your "SDK App Secret" in "your-256-bit-secret",Get  token from the left. 
+    
+    ```
+    {
+      "appKey": "string", // Your SDK key
+      "iat": long, // access token issue timestamp
+      "exp": long, // access token expire timestamp, iat + a time less than 48 hours
+      "tokenExp": long // token expire time, MIN:1800 seconds
+    }
+    ```
+    Example：  
+    ```
+    {
+      "appKey": "xxxxxxxxxxxxxxxxxxxx", 
+      "iat": 1615510799, 
+      "exp": 1647017999, 
+      "tokenExp": 1647017999 
+    }
+    ```
 
 ```dart
 class MeetingWidget extends StatelessWidget {
@@ -131,8 +168,9 @@ class MeetingWidget extends StatelessWidget {
     // Setting up the Zoom credentials
     this.zoomOptions = new ZoomOptions(
       domain: "zoom.us",
-      appKey: "appKey", // Replace with with key got from the Zoom Marketplace
-      appSecret: "appSecret", // Replace with with secret got from the Zoom Marketplace
+      appKey: "appKey",//@Deprecated 
+      appSecret: "appSecret",//@Deprecated
+      jwtToken: "jwtToken",// Replace the jwtToken
     );
 
     // Setting Zoom meeting options (default to false if not set)
